@@ -16,7 +16,7 @@ public class Main {
 		b.setupPlayerLocations(g.player6.name, g.player6.xCoordinate, g.player6.yCoordinate);
 		b.printBoard();
 		
-		g.movePlayer(g.p)
+		// Just a test, has no further function than to print out
+		g.play(g.player1);
 	}
-
 }

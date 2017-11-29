@@ -19,6 +19,15 @@ public class Game {
 		player1.xCoordinate = 17;
 		player1.yCoordinate = 1;
 		
+		/*
+		 * The names past player1 will be put under a new method
+		 * That starts giving other players the choice of who they want to be
+		 * The process will be done doing an arraylist of available names
+		 * a player picks their name and afterwards the name gets removed from the list
+		 * 
+		 * for cpu's, the players chose what their names are
+		 * the remaining is randomized among the cpus
+		 */
 		player2 = new Player();
 		player2.name = Suspects.Colonel_Mustard;
 		player2.xCoordinate = 23;
@@ -46,6 +55,7 @@ public class Game {
 		
 	}
 	public void play(Player currentPlayer) {
-//		playerMovement()
+		System.out.println("Hello " + currentPlayer.name + ", Where do you want to move?" +
+				"\n 1 = Up" + "\n 2 = Right" + "\n 3 = Down" + "\n 4 = Left");
 	}
 }
