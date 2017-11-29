@@ -13,15 +13,16 @@ public class Game {
 	
 	public Player player6;
 
-	public Board b = new
-	
-	private void createPlayerList() {
+	public void createPlayerList() {
 		player1 = new Player();
 		player1.name = Suspects.Miss_Scarlet;
-		player1.xCoordinate = 17;
-		player1.yCoordinate = 1;
+		player1.yCoordinate = 17;
+		player1.xCoordinate = 1;
 		
-		
+		player2 = new Player();
+		player2.name = Suspects.Colonel_Mustard;
+		player2.yCoordinate = 8;
+		player2.xCoordinate = 23;
 	}
 	public void play() {
 		

@@ -32,8 +32,15 @@ public class Board {
 		kitchenRoomPlacement();
 		boardTranslations();
 		
+//		printBoard();
+	}
+	
+	public void setupPlayerLocations(Suspects name, int xCoordinate, int yCoordinate) {
+		if(name == Suspects.Miss_Scarlet) {
+			board[xCoordinate][yCoordinate] = BoardSpaces.Miss_Scarlet;
+		}
+		boardTranslations();
 		printBoard();
-		
 	}
 	
 	private void boardBorders() {
@@ -131,7 +138,7 @@ public class Board {
 				board[i][j] = BoardSpaces.Wall;
 			}
 		}
-		board[9][24] = BoardSpaces.Wall;
+		board[9][23] = BoardSpaces.Wall;
 		board[16][17] = BoardSpaces.Empty;
 		board[16][18] = BoardSpaces.Empty;
 		board[16][19] = BoardSpaces.Empty;
@@ -204,17 +211,20 @@ public class Board {
 				else if(board[i][j] == BoardSpaces.Wall) {
 					asciiBoard[i][j] = "XX";
 				}
+				else if(board[i][j] == BoardSpaces.Room) {
+					asciiBoard[i][j] = "[]";
+				}
 				else if(board[i][j] == BoardSpaces.Miss_Scarlet) {
 					asciiBoard[i][j] = "P1";
 				}
-				else if(board[i][j] == BoardSpaces.Room) {
-					asciiBoard[i][j] = "[]";
+				else if(board[i][j] == BoardSpaces.Colonel_Mustard) {
+					asciiBoard[i][j] = "P2";
 				}
 			}
 		}
 	}
 	
-	private void printBoard() {
+	public void printBoard() {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				System.out.print(asciiBoard[i][j] + " ");
