@@ -1,5 +1,7 @@
 package rosado.jose.csc110;
 
+import java.util.ArrayList;
+
 public class Player {
 	/*
 	 * This class must contain:
@@ -9,12 +11,17 @@ public class Player {
 	 * player hand (reminder: all cards will be an array list of strings)
 	 */
 	
+	/*
+	 * Players must select from a list of available players
+	 */
 	public Suspects name;
 	
 	// These coordinates will be adjusted tied to their position on the board array
 	public int xCoordinate;
 	
 	public int yCoordinate;
+	
+	public ArrayList<Cards> hand;
 
 //	public void sendCoordinatesToBoardClass() {
 //		if(this.name == Suspects.Miss_Scarlet) {

@@ -37,10 +37,25 @@ public class Board {
 	
 	public void setupPlayerLocations(Suspects name, int xCoordinate, int yCoordinate) {
 		if(name == Suspects.Miss_Scarlet) {
-			board[xCoordinate][yCoordinate] = BoardSpaces.Miss_Scarlet;
+			board[yCoordinate][xCoordinate] = BoardSpaces.Miss_Scarlet;
+		}
+		if(name == Suspects.Colonel_Mustard) {
+			board[yCoordinate][xCoordinate] = BoardSpaces.Colonel_Mustard;
+		}
+		if(name == Suspects.Mrs_White) {
+			board[yCoordinate][xCoordinate] = BoardSpaces.Mrs_White;
+		}
+		if(name == Suspects.Mr_Green) {
+			board[yCoordinate][xCoordinate] = BoardSpaces.Mr_Green;
+		}
+		if(name == Suspects.Mrs_Peacock) {
+			board[yCoordinate][xCoordinate] = BoardSpaces.Mrs_Peacock;
+		}
+		if(name == Suspects.Professor_Plum) {
+			board[yCoordinate][xCoordinate] = BoardSpaces.Professor_Plum;
 		}
 		boardTranslations();
-		printBoard();
+//		printBoard();
 	}
 	
 	private void boardBorders() {
@@ -219,6 +234,18 @@ public class Board {
 				}
 				else if(board[i][j] == BoardSpaces.Colonel_Mustard) {
 					asciiBoard[i][j] = "P2";
+				}
+				else if(board[i][j] == BoardSpaces.Mrs_White) {
+					asciiBoard[i][j] = "P3";
+				}
+				else if(board[i][j] == BoardSpaces.Mr_Green) {
+					asciiBoard[i][j] = "P4";
+				}
+				else if(board[i][j] == BoardSpaces.Mrs_Peacock) {
+					asciiBoard[i][j] = "P5";
+				}
+				else if(board[i][j] == BoardSpaces.Professor_Plum) {
+					asciiBoard[i][j] = "P6";
 				}
 			}
 		}
