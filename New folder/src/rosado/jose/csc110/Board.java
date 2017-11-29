@@ -10,13 +10,13 @@ public class Board {
 	
 	public String[][] asciiBoard = new String[BOARD_HEIGHT][BOARD_WIDTH];
 	
-	
 	public void setupBoard() {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				board[i][j] = BoardSpaces.Empty;
 			}
 		}
+		
 		
 		boardBorders();
 		
@@ -33,6 +33,7 @@ public class Board {
 		boardTranslations();
 		
 		printBoard();
+		
 	}
 	
 	private void boardBorders() {
@@ -171,6 +172,10 @@ public class Board {
 		}
 		
 		// Room Tile
+		board[18][10] = BoardSpaces.Room;
+		board[18][15] = BoardSpaces.Room;
+		board[20][9] = BoardSpaces.Room;
+		board[20][16] = BoardSpaces.Room;
 		
 	}
 	
@@ -185,6 +190,8 @@ public class Board {
 		board[25][17] = BoardSpaces.Wall;
 		board[25][16] = BoardSpaces.Wall;
 		board[18][23] = BoardSpaces.Wall;
+
+		board[19][20] = BoardSpaces.Room;
 	}
 	
 	private void boardTranslations() {
@@ -192,16 +199,16 @@ public class Board {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				if(board[i][j] == BoardSpaces.Empty) {
-					asciiBoard[i][j] = " ";
+					asciiBoard[i][j] = "  ";
 				}
 				else if(board[i][j] == BoardSpaces.Wall) {
-					asciiBoard[i][j] = "X";
+					asciiBoard[i][j] = "XX";
 				}
-				else if(board[i][j] == BoardSpaces.Occupied) {
-					asciiBoard[i][j] = "0";
+				else if(board[i][j] == BoardSpaces.Miss_Scarlet) {
+					asciiBoard[i][j] = "P1";
 				}
 				else if(board[i][j] == BoardSpaces.Room) {
-					asciiBoard[i][j] = "H";
+					asciiBoard[i][j] = "[]";
 				}
 			}
 		}
