@@ -11,15 +11,13 @@ public class Board {
 	public String[][] asciiBoard = new String[BOARD_HEIGHT][BOARD_WIDTH];
 	
 	public void setupBoard() {
-		for(int i=0; i<BOARD_HEIGHT; i++) {
-			for(int j=0; j<BOARD_WIDTH; j++) {
-				board[i][j] = BoardSpaces.Empty;
-			}
-		}
-		
+//		for(int i=0; i<BOARD_HEIGHT; i++) {
+//			for(int j=0; j<BOARD_WIDTH; j++) {
+////				board[i][j] = BoardSpaces.Empty;
+//			}
+//		}
 		
 		boardBorders();
-		
 		studyRoomPlacement();
 		hallRoomPlacement();
 		loungeRoomPlacement();
@@ -31,33 +29,39 @@ public class Board {
 		ballroomPlacement();
 		kitchenRoomPlacement();
 		boardTranslations();
-		
-//		printBoard();
 	}
 	
-	public void setupPlayerLocations(Suspects name, int xCoordinate, int yCoordinate) {
-		if(name == Suspects.Miss_Scarlet) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Miss_Scarlet;
+	/*
+	 * This takes the players suspect name and matches it with this list
+	 * This list will decide where the suspect will start off in according to player order
+	 */
+	public void setupPlayerStartLocations(Player currentPlayer) {
+		if(currentPlayer.name == Suspects.Miss_Scarlet) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Miss_Scarlet;
 		}
-		if(name == Suspects.Colonel_Mustard) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Colonel_Mustard;
+		if(currentPlayer.name == Suspects.Colonel_Mustard) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Colonel_Mustard;
 		}
-		if(name == Suspects.Mrs_White) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Mrs_White;
+		if(currentPlayer.name == Suspects.Mrs_White) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mrs_White;
 		}
-		if(name == Suspects.Mr_Green) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Mr_Green;
+		if(currentPlayer.name == Suspects.Mr_Green) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mr_Green;
 		}
-		if(name == Suspects.Mrs_Peacock) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Mrs_Peacock;
+		if(currentPlayer.name == Suspects.Mrs_Peacock) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mrs_Peacock;
 		}
-		if(name == Suspects.Professor_Plum) {
-			board[yCoordinate][xCoordinate] = BoardSpaces.Professor_Plum;
+		if(currentPlayer.name == Suspects.Professor_Plum) {
+			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Professor_Plum;
 		}
-		boardTranslations();
-//		printBoard();
+//		boardTranslations();
 	}
 	
+	/*
+	 * This creates the boarders for the board
+	 * This prevents a player from going out of bounds
+	 * Also does away with ArrayOutOfBoundsException
+	 */
 	private void boardBorders() {
 		// Horizontal borders
 		for(int i=0; i<BOARD_WIDTH; i++) {
@@ -71,7 +75,10 @@ public class Board {
 			board[i][BOARD_WIDTH-1] = BoardSpaces.Wall;
 		}
 	}
-
+	
+	/*
+	 * These mark the positions for the rooms and walls
+	 */
 	private void studyRoomPlacement() {
 		for(int i=1; i<5; i++) {
 			for(int j=1; j<8; j++) {
@@ -154,9 +161,9 @@ public class Board {
 			}
 		}
 		board[9][23] = BoardSpaces.Wall;
-		board[16][17] = BoardSpaces.Empty;
-		board[16][18] = BoardSpaces.Empty;
-		board[16][19] = BoardSpaces.Empty;
+		board[16][17] = null;
+		board[16][18] = null;
+		board[16][19] = null;
 		board[17][24] = BoardSpaces.Wall;
 		
 		// Room Tile
@@ -170,7 +177,7 @@ public class Board {
 				board[i][j] = BoardSpaces.Wall;
 			}
 		}
-		board[20][6] = BoardSpaces.Empty;
+		board[20][6] = null;
 		board[25][7] = BoardSpaces.Wall;
 		board[24][7] = BoardSpaces.Wall;
 		board[25][8] = BoardSpaces.Wall;
@@ -215,12 +222,17 @@ public class Board {
 
 		board[19][20] = BoardSpaces.Room;
 	}
-	
-	private void boardTranslations() {
-		
+
+	/*
+	 *  This translates all the enums on the 2d array into ascii codes
+	 *  Eventually the player icons must represent their individual names
+	 *  For the sake of not being a any confusion after a player gets to decide
+	 *  their own character
+	 */
+	public void boardTranslations() {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
-				if(board[i][j] == BoardSpaces.Empty) {
+				if(board[i][j] == null ) {
 					asciiBoard[i][j] = "  ";
 				}
 				else if(board[i][j] == BoardSpaces.Wall) {
@@ -251,12 +263,63 @@ public class Board {
 		}
 	}
 	
+	/*
+	 * Prints the board
+	 */
 	public void printBoard() {
+		boardTranslations();
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				System.out.print(asciiBoard[i][j] + " ");
 			}
 			System.out.println();
 		}
+	}
+
+	/*
+	 *  When a character is moved, it makes the previous space move back to null
+	 *  gets called by the Game class
+	 */
+	public void removePreviousSpot(int yCoordinate, int xCoordinate) {
+		board[yCoordinate][xCoordinate] = null;
+	}
+
+	/*
+	 * This will check if the spot that was chosen either contains a wall or empty space (null)
+	 */
+	public boolean isEmpty(Player currentPlayer, int input) {
+		if(input == 1) {
+			if(board[currentPlayer.yCoordinate - 1][currentPlayer.xCoordinate] == BoardSpaces.Wall) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(input == 2) {
+			if(board[currentPlayer.yCoordinate][currentPlayer.xCoordinate + 1] == BoardSpaces.Wall) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(input == 3) {
+			if(board[currentPlayer.yCoordinate + 1][currentPlayer.xCoordinate] == BoardSpaces.Wall) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else if(input == 4) {
+			if(board[currentPlayer.yCoordinate][currentPlayer.xCoordinate - 1] == BoardSpaces.Wall) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return true;
 	}
 }

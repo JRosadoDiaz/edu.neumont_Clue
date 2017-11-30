@@ -22,10 +22,4 @@ public class Player {
 	public int yCoordinate;
 	
 	public ArrayList<Cards> hand;
-
-//	public void sendCoordinatesToBoardClass() {
-//		if(this.name == Suspects.Miss_Scarlet) {
-//			
-//		}
-//	}
 }
