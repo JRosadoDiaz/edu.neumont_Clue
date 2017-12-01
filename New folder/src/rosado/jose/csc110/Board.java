@@ -11,12 +11,6 @@ public class Board {
 	public String[][] asciiBoard = new String[BOARD_HEIGHT][BOARD_WIDTH];
 	
 	public void setupBoard() {
-//		for(int i=0; i<BOARD_HEIGHT; i++) {
-//			for(int j=0; j<BOARD_WIDTH; j++) {
-////				board[i][j] = BoardSpaces.Empty;
-//			}
-//		}
-		
 		boardBorders();
 		studyRoomPlacement();
 		hallRoomPlacement();
@@ -35,26 +29,25 @@ public class Board {
 	 * This takes the players suspect name and matches it with this list
 	 * This list will decide where the suspect will start off in according to player order
 	 */
-	public void setupPlayerStartLocations(Player currentPlayer) {
-		if(currentPlayer.name == Suspects.Miss_Scarlet) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Miss_Scarlet;
+	public void setPlayerLocation(Player currentPlayer) {
+		if(currentPlayer.getName() == Suspects.Miss_Scarlet) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Miss_Scarlet;
 		}
-		if(currentPlayer.name == Suspects.Colonel_Mustard) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Colonel_Mustard;
+		if(currentPlayer.getName() == Suspects.Colonel_Mustard) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Colonel_Mustard;
 		}
-		if(currentPlayer.name == Suspects.Mrs_White) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mrs_White;
+		if(currentPlayer.getName() == Suspects.Mrs_White) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Mrs_White;
 		}
-		if(currentPlayer.name == Suspects.Mr_Green) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mr_Green;
+		if(currentPlayer.getName() == Suspects.Mr_Green) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Mr_Green;
 		}
-		if(currentPlayer.name == Suspects.Mrs_Peacock) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Mrs_Peacock;
+		if(currentPlayer.getName() == Suspects.Mrs_Peacock) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Mrs_Peacock;
 		}
-		if(currentPlayer.name == Suspects.Professor_Plum) {
-			board[currentPlayer.yCoordinate][currentPlayer.xCoordinate] = BoardSpaces.Professor_Plum;
+		if(currentPlayer.getName() == Suspects.Professor_Plum) {
+			board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] = BoardSpaces.Professor_Plum;
 		}
-//		boardTranslations();
 	}
 	
 	/*
@@ -224,10 +217,16 @@ public class Board {
 	}
 
 	/*
-	 *  This translates all the enums on the 2d array into ascii codes
-	 *  Eventually the player icons must represent their individual names
-	 *  For the sake of not being a any confusion after a player gets to decide
-	 *  their own character
+	 *  This translates all the Enums on the 2d array into ascii codes
+	 *  the logic in Game where players decide their own suspect will decide which piece is assigned which name
+	 *  the icons simply display which player it is, the name is not important for the sake of the board
+	 *  
+	 *  
+	 *  Correction: The icons can stay the same as P1, P2, etc.
+	 *  ---- Eventually the player icons must represent their individual names
+	 *  ---- For the sake of not being a any confusion after a player gets to decide
+	 *  ---- their own character
+	 *  
 	 */
 	public void boardTranslations() {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
@@ -289,35 +288,35 @@ public class Board {
 	 */
 	public boolean isEmpty(Player currentPlayer, int input) {
 		if(input == 1) {
-			if(board[currentPlayer.yCoordinate - 1][currentPlayer.xCoordinate] == BoardSpaces.Wall) {
-				return false;
+			if(board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] != null) {
+				return true;
 			}
 			else {
-				return true;
+				return false;
 			}
 		}
 		else if(input == 2) {
-			if(board[currentPlayer.yCoordinate][currentPlayer.xCoordinate + 1] == BoardSpaces.Wall) {
-				return false;
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] != null) {
+				return true;
 			}
 			else {
-				return true;
+				return false;
 			}
 		}
 		else if(input == 3) {
-			if(board[currentPlayer.yCoordinate + 1][currentPlayer.xCoordinate] == BoardSpaces.Wall) {
-				return false;
+			if(board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] != null) {
+				return true;
 			}
 			else {
-				return true;
+				return false;
 			}
 		}
 		else if(input == 4) {
-			if(board[currentPlayer.yCoordinate][currentPlayer.xCoordinate - 1] == BoardSpaces.Wall) {
-				return false;
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] != null) {
+				return true;
 			}
 			else {
-				return true;
+				return false;
 			}
 		}
 		return true;

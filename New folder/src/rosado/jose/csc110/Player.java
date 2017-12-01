@@ -8,18 +8,45 @@ public class Player {
 	 * Name (Character name)
 	 * Players position on the 2d array
 	 * Spaces available to move (as well as original spot)
-	 * player hand (reminder: all cards will be an array list of strings)
+	 * player hand (reminder: all cards will be an ArrayList of strings)
 	 */
 	
 	/*
-	 * Players must select from a list of available players
+	 * Players must select from a list of available players before starting the game
 	 */
-	public Suspects name;
+	
+	private Suspects name;
 	
 	// These coordinates will be adjusted tied to their position on the board array
-	public int xCoordinate;
+	private int xCoordinate;
 	
-	public int yCoordinate;
+	private int yCoordinate;
 	
 	public ArrayList<Cards> hand;
+
+	public Suspects getName() {
+		return name;
+	}
+	
+	public void setName(Suspects name) {
+		this.name = name;
+	}
+	
+	public int getxCoordinate() {
+		return xCoordinate;
+	}
+	
+	public void setxCoordinate(int xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
+	
+	public int getyCoordinate() {
+		return yCoordinate;
+	}
+
+	public void setyCoordinate(int yCoordinate) {
+		this.yCoordinate = yCoordinate;
+	}
+
+
 }
