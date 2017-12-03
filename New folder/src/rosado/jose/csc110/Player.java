@@ -22,7 +22,7 @@ public class Player {
 	
 	private int yCoordinate;
 	
-	public ArrayList<Cards> hand;
+	public ArrayList<String> hand = new ArrayList<>();
 
 	public Suspects getName() {
 		return name;

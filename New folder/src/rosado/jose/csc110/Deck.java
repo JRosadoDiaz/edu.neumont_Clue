@@ -25,41 +25,41 @@ public class Deck {
 	
 	private Random gen = new Random();
 	
-	private ArrayList<Enum> list = new ArrayList<>();
+	public ArrayList<String> fullList = new ArrayList<>();
 	
-	public ArrayList<Enum> confidential = new ArrayList<>();	
+	public ArrayList<String> confidential = new ArrayList<>();	
 	
-	private ArrayList<Suspects> suspectCards = new ArrayList<>();
+	private ArrayList<String> suspectCards = new ArrayList<>();
 	private void setSuspectCards() {
-		suspectCards.add(Suspects.Miss_Scarlet);
-		suspectCards.add(Suspects.Mrs_White);
-		suspectCards.add(Suspects.Mrs_Peacock);
-		suspectCards.add(Suspects.Colonel_Mustard);
-		suspectCards.add(Suspects.Professor_Plum);
-		suspectCards.add(Suspects.Mr_Green);
+		suspectCards.add("Miss_Scarlet");
+		suspectCards.add("Mrs_White");
+		suspectCards.add("Mrs_Peacock");
+		suspectCards.add("Colonel_Mustard");
+		suspectCards.add("Professor_Plum");
+		suspectCards.add("Mr_Green");
 	}
 	
-	private ArrayList<Weapons> weaponCards = new ArrayList<>();
+	private ArrayList<String> weaponCards = new ArrayList<>();
 	private void setWeaponCards() {
-		weaponCards.add(Weapons.Rope);
-		weaponCards.add(Weapons.LeadPipe);
-		weaponCards.add(Weapons.Knife);
-		weaponCards.add(Weapons.Wrench);
-		weaponCards.add(Weapons.CandleStick);
-		weaponCards.add(Weapons.Pistol);
+		weaponCards.add("Rope");
+		weaponCards.add("LeadPipe");
+		weaponCards.add("Knife");
+		weaponCards.add("Wrench");
+		weaponCards.add("CandleStick");
+		weaponCards.add("Pistol");
 	}
 	
-	private ArrayList<Rooms> roomCards = new ArrayList<>();
+	private ArrayList<String> roomCards = new ArrayList<>();
 	private void setRoomCards() {
-		roomCards.add(Rooms.Study);
-		roomCards.add(Rooms.Hall);
-		roomCards.add(Rooms.Lounge);
-		roomCards.add(Rooms.Library);
-		roomCards.add(Rooms.DiningRoom);
-		roomCards.add(Rooms.BilliardRoom);
-		roomCards.add(Rooms.Conservatory);
-		roomCards.add(Rooms.BallRoom);
-		roomCards.add(Rooms.Kitchen);
+		roomCards.add("Study");
+		roomCards.add("Hall");
+		roomCards.add("Lounge");
+		roomCards.add("Library");
+		roomCards.add("DiningRoom");
+		roomCards.add("BilliardRoom");
+		roomCards.add("Conservatory");
+		roomCards.add("BallRoom");
+		roomCards.add("Kitchen");
 	}
 	
 	
@@ -67,22 +67,31 @@ public class Deck {
 		setSuspectCards();
 		setWeaponCards();
 		setRoomCards();
+		
+		// These will choose what card will be set as the confidential card by using a random number from the deck and then removing it
 		setConfidentialCards(generateNumber(suspectCards), suspectCards);
 		setConfidentialCards(generateNumber(weaponCards), weaponCards);
 		setConfidentialCards(generateNumber(roomCards), roomCards);
+		setFullList();
 	}
 	
-	private int generateNumber(ArrayList separateList) {
-		return gen.nextInt(separateList.size());
+	public int generateNumber(ArrayList<String> currentList) {
+		int max = currentList.size();
+		int min = 1;
+		return gen.nextInt(max + 1 - min);
 	}
 	
-	private void setConfidentialCards(int pew, ArrayList cool) {
-		confidential.add((Enum)cool.get(pew));
+	private void setConfidentialCards(int i, ArrayList<String> currentList) {
+		confidential.add(currentList.get(i));
+		currentList.remove(i);
+		
+		//Test
+//		System.out.println(confidential);
 	}
 	
-	public void setFullList() {
-		list.addAll(suspectCards);
-		list.addAll(weaponCards);
-		list.addAll(roomCards);
+	private void setFullList() {
+		fullList.addAll(suspectCards);
+		fullList.addAll(weaponCards);
+		fullList.addAll(roomCards);
 	}
 }

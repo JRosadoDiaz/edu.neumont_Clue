@@ -8,6 +8,8 @@ public class Board {
 	
 	public BoardSpaces[][] board = new BoardSpaces[BOARD_HEIGHT][BOARD_WIDTH];
 	
+	public Rooms[][] roomLocation = new Rooms[BOARD_HEIGHT][BOARD_WIDTH];
+	
 	public String[][] asciiBoard = new String[BOARD_HEIGHT][BOARD_WIDTH];
 	
 	public void setupBoard() {
@@ -82,6 +84,8 @@ public class Board {
 		
 		//Room Tile
 		board[4][7] = BoardSpaces.Room;
+		
+		roomLocation[5][7] = Rooms.Study;
 	}
 	
 	private void hallRoomPlacement() {
@@ -109,6 +113,8 @@ public class Board {
 		
 		// Room tile
 		board[6][18] = BoardSpaces.Room;
+		
+		roomLocation[7][18] = Rooms.Lounge;
 	}
 	
 	private void libraryRoomPlacement() {
@@ -220,43 +226,39 @@ public class Board {
 	 *  This translates all the Enums on the 2d array into ascii codes
 	 *  the logic in Game where players decide their own suspect will decide which piece is assigned which name
 	 *  the icons simply display which player it is, the name is not important for the sake of the board
-	 *  
-	 *  
-	 *  Correction: The icons can stay the same as P1, P2, etc.
-	 *  ---- Eventually the player icons must represent their individual names
-	 *  ---- For the sake of not being a any confusion after a player gets to decide
-	 *  ---- their own character
-	 *  
 	 */
 	public void boardTranslations() {
 		for(int i=0; i<BOARD_HEIGHT; i++) {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				if(board[i][j] == null ) {
 					asciiBoard[i][j] = "  ";
+//					if(roomLocation[i][j] == Rooms.Study || roomLocation[i][j] == Rooms.Lounge) {
+//						asciiBoard[i][j] = "YY";
+//					}
 				}
 				else if(board[i][j] == BoardSpaces.Wall) {
-					asciiBoard[i][j] = "XX";
+					asciiBoard[i][j] = "--";
 				}
 				else if(board[i][j] == BoardSpaces.Room) {
 					asciiBoard[i][j] = "[]";
 				}
 				else if(board[i][j] == BoardSpaces.Miss_Scarlet) {
-					asciiBoard[i][j] = "P1";
+					asciiBoard[i][j] = "MS";
 				}
 				else if(board[i][j] == BoardSpaces.Colonel_Mustard) {
-					asciiBoard[i][j] = "P2";
+					asciiBoard[i][j] = "CM";
 				}
 				else if(board[i][j] == BoardSpaces.Mrs_White) {
-					asciiBoard[i][j] = "P3";
+					asciiBoard[i][j] = "MW";
 				}
 				else if(board[i][j] == BoardSpaces.Mr_Green) {
-					asciiBoard[i][j] = "P4";
+					asciiBoard[i][j] = "MG";
 				}
 				else if(board[i][j] == BoardSpaces.Mrs_Peacock) {
-					asciiBoard[i][j] = "P5";
+					asciiBoard[i][j] = "MP";
 				}
 				else if(board[i][j] == BoardSpaces.Professor_Plum) {
-					asciiBoard[i][j] = "P6";
+					asciiBoard[i][j] = "PP";
 				}
 			}
 		}
@@ -288,7 +290,7 @@ public class Board {
 	 */
 	public boolean isEmpty(Player currentPlayer, int input) {
 		if(input == 1) {
-			if(board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] != null) {
+			if(board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] == null || board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] == BoardSpaces.Room) {
 				return true;
 			}
 			else {
@@ -296,7 +298,7 @@ public class Board {
 			}
 		}
 		else if(input == 2) {
-			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] != null) {
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] == null || board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] == BoardSpaces.Room) {
 				return true;
 			}
 			else {
@@ -304,7 +306,7 @@ public class Board {
 			}
 		}
 		else if(input == 3) {
-			if(board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] != null) {
+			if(board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] == null || board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] == BoardSpaces.Room) {
 				return true;
 			}
 			else {
@@ -312,7 +314,7 @@ public class Board {
 			}
 		}
 		else if(input == 4) {
-			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] != null) {
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] == null || board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] == BoardSpaces.Room) {
 				return true;
 			}
 			else {

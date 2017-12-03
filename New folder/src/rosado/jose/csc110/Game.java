@@ -3,6 +3,7 @@ package rosado.jose.csc110;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -26,91 +27,345 @@ public class Game {
 	
 	public Player player6;
 
+	
+	public void play() throws IOException {
+		Board b = new Board();
+		b.setupBoard();
+		
+		Deck d = new Deck();
+		d.choseConfidential();
+		
+		howManyPlayers();
+			
+		createPlayerList();
+		askPlayersForNames();
+		
+		// This WHILE loop will change to win/lose condition once its implemented
+		while(true) {
+			// This will determine how the cards are sent to each player
+			switch(numberOfPlayers) {
+				case 2:
+					shuffleCards(player1, d);
+					shuffleCards(player2, d);
+					break;
+				case 3:
+					shuffleCards(player1, d);
+					shuffleCards(player2, d);
+					shuffleCards(player3, d);
+					break;
+				case 4:
+					shuffleCards(player1, d);
+					shuffleCards(player2, d);
+					shuffleCards(player3, d);
+					shuffleCards(player4, d);
+					checkForCardRemainders(d);
+					break;
+				case 5:
+					shuffleCards(player1, d);
+					shuffleCards(player2, d);
+					shuffleCards(player3, d);
+					shuffleCards(player4, d);
+					shuffleCards(player5, d);
+					checkForCardRemainders(d);
+					break;
+				case 6:
+					shuffleCards(player1, d);
+					shuffleCards(player2, d);
+					shuffleCards(player3, d);
+					shuffleCards(player4, d);
+					shuffleCards(player5, d);
+					shuffleCards(player6, d);
+					break;
+				default:
+					System.out.println("should never happen");
+			}
+			
+			// This will determine turn order depending on number of players
+			if(numberOfPlayers >= 2) {
+				playerTurn(player1, b);
+				playerTurn(player2, b);
+				
+				if(numberOfPlayers >= 3) {
+					playerTurn(player3, b);
+					
+					if(numberOfPlayers >= 4) {
+						playerTurn(player4, b);
+						
+						if(numberOfPlayers >= 5) {
+							playerTurn(player5, b);
+							
+							if(numberOfPlayers == 6) {
+								playerTurn(player6, b);
+							} // End of 6 players
+						} // End of 5 players
+					} // End of 4 players
+				} // End of 3 players
+			} // End of 2 players
+		} // End of WHILE loop
+	} // End of method
+	
 	/*
 	 * This creates the cast of characters and their starting positions
 	 * there will be a method after player 1 is made to ask how many players there will be
 	 * Clue must have a minimum of 2 players
 	 * and a maximum of 6 players total
 	 */
-	public void createPlayerList() {
+	public void createPlayerList() throws IOException {
 		player1 = new Player();
 		player1.setName(Suspects.Miss_Scarlet);
 		player1.setxCoordinate(17);
 		player1.setyCoordinate(1);
-		
-		/*
-		 * The names past player1 will be put under a new method
-		 * That starts giving other players the choice of who they want to be
-		 * The process will be done doing an ArrayList of available names
-		 * a player picks their name and afterwards the name gets removed from the list
-		 * 
-		 * for cpu's, the players chose what their names are
-		 * the remaining is randomized among the cpu's
-		 * the setName() lines will be removed once this has been implemented
-		 */
-
-		// This is just a placeholder, it has no function
-		howManyPlayers();
-		
+				
 		player2 = new Player();
-		player2.setName(Suspects.Colonel_Mustard);
 		player2.setxCoordinate(23);
 		player2.setyCoordinate(8);
 		
 		player3 = new Player();
-		player3.setName(Suspects.Mrs_White);
 		player3.setxCoordinate(15);
 		player3.setyCoordinate(25);
 		
 		player4 = new Player();
-		player4.setName(Suspects.Mr_Green);
 		player4.setxCoordinate(10);
 		player4.setyCoordinate(25);
-
+		
 		player5 = new Player();
-		player5.setName(Suspects.Mrs_Peacock);
 		player5.setxCoordinate(1);
 		player5.setyCoordinate(19);
-
+		
 		player6 = new Player();
-		player6.setName(Suspects.Professor_Plum);
 		player6.setxCoordinate(1);
 		player6.setyCoordinate(6);
-		
 	}
 	
-	private void howManyPlayers() {
-		/*
-		 * This method will ask the user at the start how many players will there be
-		 * There will also be another method inside asking who the players (except player 1) would like to be
-		 * player 1 is always Miss Scarlet
-		 * Currently this is just a placeholder
-		 */
+	private void askPlayersForNames() throws IOException {
+		ArrayList<Suspects> suspectNames = new ArrayList<>();
+		suspectNames.add(Suspects.Colonel_Mustard);
+		suspectNames.add(Suspects.Mr_Green);
+		suspectNames.add(Suspects.Mrs_Peacock);
+		suspectNames.add(Suspects.Mrs_White);
+		suspectNames.add(Suspects.Professor_Plum);
+		
+		System.out.println("Player 1, you will be Miss Scarlet \n");
+		
+		if(numberOfPlayers == 2) {
+			System.out.print("Player 2");
+			playersChooseTheirName(player2, suspectNames);
+			randomizeRemainingNames(suspectNames);
+		}
+			
+		if(numberOfPlayers == 3) {
+			System.out.print("Player 2");
+			playersChooseTheirName(player2, suspectNames);
+			System.out.print("Player 3");
+			playersChooseTheirName(player3, suspectNames);
+			randomizeRemainingNames(suspectNames);
+		}
+		
+		if(numberOfPlayers == 4) {
+			System.out.print("Player 2");
+			playersChooseTheirName(player2, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 3");
+			playersChooseTheirName(player3, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 4");
+			playersChooseTheirName(player4, suspectNames);
+			randomizeRemainingNames(suspectNames);
+		}
+		
+		if(numberOfPlayers == 5) {
+			System.out.print("Player 2");
+			playersChooseTheirName(player2, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 3");
+			playersChooseTheirName(player3, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 4");
+			playersChooseTheirName(player4, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 5");
+			playersChooseTheirName(player5, suspectNames);
+			randomizeRemainingNames(suspectNames);
+		}
+		
+		if(numberOfPlayers == 6) {
+			System.out.print("Player 2");
+			playersChooseTheirName(player2, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 3");
+			playersChooseTheirName(player3, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 4");
+			playersChooseTheirName(player4, suspectNames);
+			System.out.println();
+			
+			System.out.print("Player 5");
+			playersChooseTheirName(player5, suspectNames);
+			System.out.println();
+			
+			System.out.println("Player 6, Your name will be " + suspectNames.get(0) + "\n");
+		}
 	}
-	
-	public void play() throws IOException {
-		Board b = new Board();
-		b.setupBoard();
+
+	private void randomizeRemainingNames(ArrayList<Suspects> suspectNames) {
+		if(numberOfPlayers <= 5) {
+			int gen = generator.nextInt(suspectNames.size());
+			player6.setName(suspectNames.get(gen));
+			suspectNames.remove(gen);
+			
+			if(numberOfPlayers <= 4) {
+				gen = generator.nextInt(suspectNames.size());
+				player5.setName(suspectNames.get(gen));
+				suspectNames.remove(gen);
+			
+				if(numberOfPlayers <= 3) {
+					gen = generator.nextInt(suspectNames.size());
+					player4.setName(suspectNames.get(gen));
+					suspectNames.remove(gen);
+			
+					if(numberOfPlayers == 2) {
+						gen = generator.nextInt(suspectNames.size());
+						player3.setName(suspectNames.get(gen));
+						suspectNames.remove(gen);
+					}
+				}
+			}
+		}
+	}
+
+	private void playersChooseTheirName(Player currentPlayer, ArrayList<Suspects> suspectNames) throws IOException {
+		boolean isValidInput = false;
+		while(!isValidInput) {
+			try {
+				System.out.println(", what will your name be? Here are your options:");
+				
+				for(int i=0; i<suspectNames.size(); i++) {
+					System.out.println((i+1) + " = " + suspectNames.get(i));
+				}
+				
+				String rawInput = in.readLine();
+				int input = Integer.parseInt(rawInput) - 1;
+				
+				currentPlayer.setName(suspectNames.get(input));
+				suspectNames.remove(input);
+				
+				isValidInput = true;
+			}
+			catch (NumberFormatException ex) {
+				System.out.println("That is not a valid option, try again");
+			}
+		}
 		
-		howManyPlayers();
-		
-		// This WHILE loop will change to win/lose condition once its implemented
-		while(true) {
-			// The players past player2 will have if statements depending on how may cpu's are active
-			playerTurn(player1, b);
-			
-			playerTurn(player2, b);
-			
-			playerTurn(player3, b);
-			
-			playerTurn(player4, b);
-			
-			playerTurn(player5, b);
-			
-			playerTurn(player6, b);
+	}
+
+	/*
+	 * This method will shuffle cards
+	 * It is done by calling the Deck class' fullList of strings
+	 * First by getting a random index number from fullList
+	 * Adding that random index to the currentPlayer's hand ArrayList
+	 * and then removing that random index number from fullList
+	 * The amount of cards that is given to each player is separated by numberOfPlayers
+	 */
+	private void shuffleCards(Player currentPlayer, Deck d) {
+		if(numberOfPlayers == 2) {
+			// This will add a random card from the full list onto the players hand
+			for(int i=0; i<9; i++) {
+				int randomCard = d.generateNumber(d.fullList);
+				currentPlayer.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
+		}
+		else if(numberOfPlayers == 3) {
+			for(int i=0; i<6; i++) {
+				int randomCard = d.generateNumber(d.fullList);
+				currentPlayer.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
+		}
+		else if(numberOfPlayers == 4) {
+			for(int i=0; i<4; i++) {
+				int randomCard = d.generateNumber(d.fullList);
+				currentPlayer.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
+		}
+		else if(numberOfPlayers == 5) {
+			for(int i=0; i<3; i++) {
+				int randomCard = d.generateNumber(d.fullList);
+				currentPlayer.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
+		}
+		else if(numberOfPlayers == 6) {
+			for(int i=0; i<3; i++) {
+				int randomCard = d.generateNumber(d.fullList);
+				currentPlayer.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
 		}
 	}
 	
+	/*
+	 * This method deals with how the game deals cards to players that don't divide evenly
+	 * Each player is given one card at a time
+	 * Until the all the cards are dealt
+	 */
+	private void checkForCardRemainders(Deck d) {
+		if(numberOfPlayers >= 4) {
+			int randomCard = d.generateNumber(d.fullList);
+			player1.hand.add(d.fullList.get(randomCard));
+			d.fullList.remove(randomCard);
+			
+			randomCard = d.generateNumber(d.fullList);
+			player2.hand.add(d.fullList.get(randomCard));
+			d.fullList.remove(randomCard);
+			
+			if(numberOfPlayers == 5) {
+				randomCard = d.generateNumber(d.fullList);
+				player3.hand.add(d.fullList.get(randomCard));
+				d.fullList.remove(randomCard);
+			}
+		}
+	}
+	
+	/*
+	 * This method will ask the user at the start how many players will there be
+	 * There will also be another method inside asking who the players (except player 1) would like to be
+	 * player 1 is always Miss Scarlet
+	 */
+	private void howManyPlayers() throws IOException {
+		boolean isValidInput = false;
+		while(!isValidInput) {
+			System.out.println("How many players are playing?" 
+					+ "\n 2 players"
+					+ "\n 3 players"
+					+ "\n 4 players"
+					+ "\n 5 players"
+					+ "\n 6 players");
+			try {
+				String rawInput = in.readLine();
+				numberOfPlayers = Integer.parseInt(rawInput);
+			}
+			catch(NumberFormatException ex) {
+				System.out.println("We need a number,");
+			}
+			if(numberOfPlayers < 2 || numberOfPlayers > 6) {
+				System.out.println("This game is up to a minimum of 2 and a maximum of 6 players, pick again");
+			}
+			else {
+				isValidInput = true;
+			}
+		}
+	}
+	
+
 
 	/*
 	 * This method will contain all the code and methods that constitute a player turn
@@ -126,14 +381,29 @@ public class Game {
 		for(int i=dice; i>0; i--) {
 			placePlayers(b);
 			System.out.println();
+			System.out.println("Hello " + currentPlayer.getName() + ", \n");
+			System.out.println("Your Hand: " + currentPlayer.hand + "\n");
 			System.out.println("You rolled a " + dice);
-			System.out.println("You have " + i + " more spaces to move \n");
-			playerMovement(currentPlayer, b);
+			System.out.println("You have " + i + " more spaces to move");
+			
+			boolean isValidInput = false;
+			while(!isValidInput) {
+				try {
+					playerMovement(currentPlayer, b);
+					isValidInput = true;
+				}
+				catch(NumberFormatException ex) {
+					System.out.println("That's not a valid input. Try again");
+				}
+				
+			}
 		}
 	}
 	
 	private void DiceRoll() {
-		dice = generator.nextInt(12) + 1;
+		int max = 12;
+		int min = 2;
+		dice = generator.nextInt(max + 1 - min) + min;
 	}
 
 	/*
@@ -160,18 +430,28 @@ public class Game {
 	 *  - An invalid input will not count towards the dice roll counter, allowing for safe errors
 	 */
 	private void playerMovement(Player currentPlayer, Board b) throws IOException {
-		System.out.println("Hello " + currentPlayer.getName() + ",");
 		
 		boolean isValidInput = false;
 		while(!isValidInput) {
-			System.out.println("Where do you want to move?" 
-					+ "\n 1 = Up" 
-					+ "\n 2 = Right" 
-					+ "\n 3 = Down" 
-					+ "\n 4 = Left");
+			if(checkForRoom(currentPlayer, b)) {
+				System.out.println("You found a room! \n"
+						+ "Where do you want to move?"
+						+ "\n 1 = Up"
+						+ "\n 2 = Left" 
+						+ "\n 3 = Down"
+						+ "\n 4 = Right"
+						+ "\n 5 = Enter Room");
+			}
+			else {
+				System.out.println("Where do you want to move?"
+						+ "\n 1 = Up"
+						+ "\n 2 = Left" 
+						+ "\n 3 = Down"
+						+ "\n 4 = Right");
+			}
 			String rawInput = in.readLine();
 			int input = Integer.parseInt(rawInput);
-			
+				
 			/*
 			 * Eventually, there needs to be a method to check for a room
 			 * Once there is a room, ask player if they wish to enter (likely by adding the option to the movement menu)
@@ -180,7 +460,7 @@ public class Game {
 			switch(input) {
 				case 1:
 					// Up
-					if(!b.isEmpty(currentPlayer, input)) {
+					if(b.isEmpty(currentPlayer, input)) {
 						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
 						currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() - 1);
 						isValidInput = true;
@@ -190,10 +470,10 @@ public class Game {
 					}
 					break;
 				case 2:
-					// Right
-					if(!b.isEmpty(currentPlayer, input)) {
+					// Left
+					if(b.isEmpty(currentPlayer, input)) {
 						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
+						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
 						isValidInput = true;
 					}
 					else {
@@ -202,7 +482,7 @@ public class Game {
 					break;
 				case 3:
 					// Down
-					if(!b.isEmpty(currentPlayer, input)) {
+					if(b.isEmpty(currentPlayer, input)) {
 						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
 						currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() + 1);
 						isValidInput = true;
@@ -212,19 +492,69 @@ public class Game {
 					}
 					break;
 				case 4:
-					// Left
-					if(!b.isEmpty(currentPlayer, input)) {
+					// Right
+					if(b.isEmpty(currentPlayer, input)) {
 						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
+						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
 						isValidInput = true;
 					}
 					else {
 						System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
 					}
 					break;
+				case 5:
+					// Enter Room
+					if(checkForRoom(currentPlayer, b)) {
+						// The player is on a doorway
+						roomLogicMagic(currentPlayer);
+						break;
+					}
+					else {
+						System.out.println("That's not a valid coordinate");
+					}
 				default:
 					System.out.println("Thats not a valid coordinate");
 			} // End of Switch
 		} // End of WHILE loop
 	} // End of method
+
+	private void roomLogicMagic(Player currentPlayer) {
+		
+		
+	}
+
+	private boolean checkForRoom(Player currentPlayer, Board b) {
+		for(int i=0; i<27; i++) {
+			for(int j=0; j<25; j++) {
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Study) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Hall) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Lounge) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Library) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.DiningRoom) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BilliardRoom) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Conservatory) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BallRoom) {
+					return true;
+				}
+				if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Kitchen) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 } // End of class
