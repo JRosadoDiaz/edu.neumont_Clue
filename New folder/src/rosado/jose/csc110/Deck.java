@@ -69,16 +69,17 @@ public class Deck {
 		setRoomCards();
 		
 		// These will choose what card will be set as the confidential card by using a random number from the deck and then removing it
-		setConfidentialCards(generateNumber(suspectCards), suspectCards);
-		setConfidentialCards(generateNumber(weaponCards), weaponCards);
-		setConfidentialCards(generateNumber(roomCards), roomCards);
+		setConfidentialCards(generateNumberForCards(suspectCards), suspectCards);
+		setConfidentialCards(generateNumberForCards(weaponCards), weaponCards);
+		setConfidentialCards(generateNumberForCards(roomCards), roomCards);
 		setFullList();
 	}
 	
-	public int generateNumber(ArrayList<String> currentList) {
-		int max = currentList.size();
-		int min = 1;
-		return gen.nextInt(max + 1 - min);
+	public int generateNumberForCards(ArrayList<String> currentList) {
+			int max = currentList.size();
+			int min = 1;
+			int roll = gen.nextInt(max + 1 - min);
+			return roll;
 	}
 	
 	private void setConfidentialCards(int i, ArrayList<String> currentList) {

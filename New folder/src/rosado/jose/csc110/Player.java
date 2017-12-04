@@ -23,6 +23,8 @@ public class Player {
 	private int yCoordinate;
 	
 	public ArrayList<String> hand = new ArrayList<>();
+	
+	private boolean insideRoom = false;
 
 	public Suspects getName() {
 		return name;
@@ -46,6 +48,14 @@ public class Player {
 
 	public void setyCoordinate(int yCoordinate) {
 		this.yCoordinate = yCoordinate;
+	}
+
+	public boolean isInsideRoom() {
+		return insideRoom;
+	}
+
+	public void setInsideRoom(boolean insideRoom) {
+		this.insideRoom = insideRoom;
 	}
 
 

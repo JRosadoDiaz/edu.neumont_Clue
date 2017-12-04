@@ -27,5 +27,10 @@ public class RoomLogic {
 	
 	public ArrayList<Player> KitchenRoom = new ArrayList<>();
 	
+	public void movePlayersToRoom(Player currentPlayer, ArrayList<Player> room) {
+		room.add(currentPlayer);
+		currentPlayer.setInsideRoom(true);
+	}
+	
 	
 }

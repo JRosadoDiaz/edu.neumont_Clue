@@ -35,67 +35,69 @@ public class Game {
 		Deck d = new Deck();
 		d.choseConfidential();
 		
+		RoomLogic r = new RoomLogic();
+		
 		howManyPlayers();
 			
 		createPlayerList();
 		askPlayersForNames();
 		
 		// This WHILE loop will change to win/lose condition once its implemented
-		while(true) {
 			// This will determine how the cards are sent to each player
-			switch(numberOfPlayers) {
-				case 2:
-					shuffleCards(player1, d);
-					shuffleCards(player2, d);
-					break;
-				case 3:
-					shuffleCards(player1, d);
-					shuffleCards(player2, d);
-					shuffleCards(player3, d);
-					break;
-				case 4:
-					shuffleCards(player1, d);
-					shuffleCards(player2, d);
-					shuffleCards(player3, d);
-					shuffleCards(player4, d);
-					checkForCardRemainders(d);
-					break;
-				case 5:
-					shuffleCards(player1, d);
-					shuffleCards(player2, d);
-					shuffleCards(player3, d);
-					shuffleCards(player4, d);
-					shuffleCards(player5, d);
-					checkForCardRemainders(d);
-					break;
-				case 6:
-					shuffleCards(player1, d);
-					shuffleCards(player2, d);
-					shuffleCards(player3, d);
-					shuffleCards(player4, d);
-					shuffleCards(player5, d);
-					shuffleCards(player6, d);
-					break;
-				default:
-					System.out.println("should never happen");
-			}
+		switch(numberOfPlayers) {
+			case 2:
+				shuffleCards(player1, d);
+				shuffleCards(player2, d);
+				break;
+			case 3:
+				shuffleCards(player1, d);
+				shuffleCards(player2, d);
+				shuffleCards(player3, d);
+				break;
+			case 4:
+				shuffleCards(player1, d);
+				shuffleCards(player2, d);
+				shuffleCards(player3, d);
+				shuffleCards(player4, d);
+				checkForCardRemainders(d);
+				break;
+			case 5:
+				shuffleCards(player1, d);
+				shuffleCards(player2, d);
+				shuffleCards(player3, d);
+				shuffleCards(player4, d);
+				shuffleCards(player5, d);
+				checkForCardRemainders(d);
+				break;
+			case 6:
+				shuffleCards(player1, d);
+				shuffleCards(player2, d);
+				shuffleCards(player3, d);
+				shuffleCards(player4, d);
+				shuffleCards(player5, d);
+				shuffleCards(player6, d);
+				break;
+			default:
+				System.out.println("should never happen");
+		}
 			
 			// This will determine turn order depending on number of players
+		while(true) {
 			if(numberOfPlayers >= 2) {
-				playerTurn(player1, b);
-				playerTurn(player2, b);
+				playerTurn(player1, b, r);
+				playerTurn(player2, b, r);
 				
 				if(numberOfPlayers >= 3) {
-					playerTurn(player3, b);
+					playerTurn(player3, b, r);
 					
 					if(numberOfPlayers >= 4) {
-						playerTurn(player4, b);
+						playerTurn(player4, b, r);
 						
 						if(numberOfPlayers >= 5) {
-							playerTurn(player5, b);
+							playerTurn(player5, b, r);
 							
 							if(numberOfPlayers == 6) {
-								playerTurn(player6, b);
+								playerTurn(player6, b, r);
 							} // End of 6 players
 						} // End of 5 players
 					} // End of 4 players
@@ -277,35 +279,35 @@ public class Game {
 		if(numberOfPlayers == 2) {
 			// This will add a random card from the full list onto the players hand
 			for(int i=0; i<9; i++) {
-				int randomCard = d.generateNumber(d.fullList);
+				int randomCard = d.generateNumberForCards(d.fullList);
 				currentPlayer.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 3) {
 			for(int i=0; i<6; i++) {
-				int randomCard = d.generateNumber(d.fullList);
+				int randomCard = d.generateNumberForCards(d.fullList);
 				currentPlayer.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 4) {
 			for(int i=0; i<4; i++) {
-				int randomCard = d.generateNumber(d.fullList);
+				int randomCard = d.generateNumberForCards(d.fullList);
 				currentPlayer.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 5) {
 			for(int i=0; i<3; i++) {
-				int randomCard = d.generateNumber(d.fullList);
+				int randomCard = d.generateNumberForCards(d.fullList);
 				currentPlayer.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 6) {
 			for(int i=0; i<3; i++) {
-				int randomCard = d.generateNumber(d.fullList);
+				int randomCard = d.generateNumberForCards(d.fullList);
 				currentPlayer.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
@@ -319,16 +321,16 @@ public class Game {
 	 */
 	private void checkForCardRemainders(Deck d) {
 		if(numberOfPlayers >= 4) {
-			int randomCard = d.generateNumber(d.fullList);
+			int randomCard = d.generateNumberForCards(d.fullList);
 			player1.hand.add(d.fullList.get(randomCard));
 			d.fullList.remove(randomCard);
 			
-			randomCard = d.generateNumber(d.fullList);
+			randomCard = d.generateNumberForCards(d.fullList);
 			player2.hand.add(d.fullList.get(randomCard));
 			d.fullList.remove(randomCard);
 			
 			if(numberOfPlayers == 5) {
-				randomCard = d.generateNumber(d.fullList);
+				randomCard = d.generateNumberForCards(d.fullList);
 				player3.hand.add(d.fullList.get(randomCard));
 				d.fullList.remove(randomCard);
 			}
@@ -376,7 +378,7 @@ public class Game {
 	 *  - Checking for and entering a room
 	 *  - room logic (which includes accusations and shortcuts)
 	 */
-	private void playerTurn(Player currentPlayer, Board b) throws IOException {
+	private void playerTurn(Player currentPlayer, Board b, RoomLogic r) throws IOException {
 		DiceRoll();
 		for(int i=dice; i>0; i--) {
 			placePlayers(b);
@@ -389,7 +391,7 @@ public class Game {
 			boolean isValidInput = false;
 			while(!isValidInput) {
 				try {
-					playerMovement(currentPlayer, b);
+					playerMovement(currentPlayer, b, r);
 					isValidInput = true;
 				}
 				catch(NumberFormatException ex) {
@@ -429,7 +431,7 @@ public class Game {
 	 *  - then change the players coordinates accordingly and sets the Enum position on the board
 	 *  - An invalid input will not count towards the dice roll counter, allowing for safe errors
 	 */
-	private void playerMovement(Player currentPlayer, Board b) throws IOException {
+	private void playerMovement(Player currentPlayer, Board b, RoomLogic r) throws IOException {
 		
 		boolean isValidInput = false;
 		while(!isValidInput) {
@@ -506,7 +508,7 @@ public class Game {
 					// Enter Room
 					if(checkForRoom(currentPlayer, b)) {
 						// The player is on a doorway
-						roomLogicMagic(currentPlayer);
+						roomLogicMagic(currentPlayer, b, r);
 						break;
 					}
 					else {
@@ -518,8 +520,38 @@ public class Game {
 		} // End of WHILE loop
 	} // End of method
 
-	private void roomLogicMagic(Player currentPlayer) {
-		
+	private void roomLogicMagic(Player currentPlayer, Board b, RoomLogic r) {
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Study) {
+			System.out.println("You entered the Study!");
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BallRoom) {
+			System.out.println("You entered the BallRoom!");
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BilliardRoom) {
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Conservatory) {
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.DiningRoom) {
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Hall) {
+			System.out.println("You entered the hall!");
+			r.movePlayersToRoom(currentPlayer, r.HallRoom);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+			System.out.println("There is a (Weapon PlaceHolder) here");
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Kitchen) {
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Library) {
+			
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Lounge) {
+			
+		}
 		
 	}
 

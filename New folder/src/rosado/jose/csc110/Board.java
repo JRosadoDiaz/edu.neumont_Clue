@@ -101,6 +101,11 @@ public class Board {
 		board[5][10] = BoardSpaces.Room; // Left Side room
 		board[7][12] = BoardSpaces.Room;
 		board[7][13] = BoardSpaces.Room;
+		
+		//Doorway tiles
+		roomLocation[8][12] = Rooms.Hall;
+		roomLocation[8][13] = Rooms.Hall;
+		roomLocation[4][10] = Rooms.Hall;
 	}
 	
 	private void loungeRoomPlacement() {
@@ -114,6 +119,7 @@ public class Board {
 		// Room tile
 		board[6][18] = BoardSpaces.Room;
 		
+		// Doorway tiles
 		roomLocation[7][18] = Rooms.Lounge;
 	}
 	
@@ -130,6 +136,10 @@ public class Board {
 		// Room Tile
 		board[9][7] = BoardSpaces.Room; // Right side door
 		board[11][4] = BoardSpaces.Room; // Bottom side door
+		
+		// Doorway Tiles
+		roomLocation[9][8] = Rooms.Library;
+		roomLocation[12][4] = Rooms.Library;
 	}
 	
 	private void clueRoomPlacement() {
@@ -151,6 +161,10 @@ public class Board {
 		// Room Tile
 		board[13][2] = BoardSpaces.Room; // Top Room
 		board[16][6] = BoardSpaces.Room; // Right Side Room
+
+		// Doorway Tiles
+		roomLocation[12][2] = Rooms.BilliardRoom;
+		roomLocation[16][7] = Rooms.BilliardRoom;
 	}
 
 	private void diningRoomPlacement() {
@@ -166,8 +180,12 @@ public class Board {
 		board[17][24] = BoardSpaces.Wall;
 		
 		// Room Tile
-		board[10][18] = BoardSpaces.Room; //Top Side Room
+		board[10][18] = BoardSpaces.Room; //Top Room
 		board[13][17] = BoardSpaces.Room; //Left Side Room
+
+		// Doorway Tile
+		roomLocation[9][18] = Rooms.DiningRoom;
+		roomLocation[13][16] = Rooms.DiningRoom;
 	}
 	
 	private void conservatoryRoomPlacement() {
@@ -184,6 +202,9 @@ public class Board {
 		
 		// Room Tile
 		board[20][5] = BoardSpaces.Room;
+		
+		//Doorway tile
+		roomLocation[20][6] = Rooms.Conservatory;
 	}
 	
 	private void ballroomPlacement() {
@@ -200,10 +221,16 @@ public class Board {
 		}
 		
 		// Room Tile
-		board[18][10] = BoardSpaces.Room;
-		board[18][15] = BoardSpaces.Room;
-		board[20][9] = BoardSpaces.Room;
-		board[20][16] = BoardSpaces.Room;
+		board[18][10] = BoardSpaces.Room; // Top Left Room
+		board[18][15] = BoardSpaces.Room; // Top Right Room
+		board[20][9] = BoardSpaces.Room; // Left Room
+		board[20][16] = BoardSpaces.Room; // Right Room
+		
+		// Doorway tile
+		roomLocation[17][10] = Rooms.BallRoom;
+		roomLocation[17][15] = Rooms.BallRoom;
+		roomLocation[20][8] = Rooms.BallRoom;
+		roomLocation[20][17] = Rooms.BallRoom;
 		
 	}
 	
@@ -219,7 +246,11 @@ public class Board {
 		board[25][16] = BoardSpaces.Wall;
 		board[18][23] = BoardSpaces.Wall;
 
+		// Room Tile
 		board[19][20] = BoardSpaces.Room;
+		
+		// Doorway tile
+		roomLocation[18][20] = Rooms.Kitchen;
 	}
 
 	/*
@@ -232,9 +263,6 @@ public class Board {
 			for(int j=0; j<BOARD_WIDTH; j++) {
 				if(board[i][j] == null ) {
 					asciiBoard[i][j] = "  ";
-//					if(roomLocation[i][j] == Rooms.Study || roomLocation[i][j] == Rooms.Lounge) {
-//						asciiBoard[i][j] = "YY";
-//					}
 				}
 				else if(board[i][j] == BoardSpaces.Wall) {
 					asciiBoard[i][j] = "--";
