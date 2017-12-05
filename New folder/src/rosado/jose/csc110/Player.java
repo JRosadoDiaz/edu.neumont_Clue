@@ -22,6 +22,10 @@ public class Player {
 	
 	private int yCoordinate;
 	
+	private int previousxCoordinate;
+	
+	private int previousyCoordinate;
+	
 	public ArrayList<String> hand = new ArrayList<>();
 	
 	private boolean insideRoom = false;
@@ -56,6 +60,22 @@ public class Player {
 
 	public void setInsideRoom(boolean insideRoom) {
 		this.insideRoom = insideRoom;
+	}
+
+	public int getPreviousxCoordinate() {
+		return previousxCoordinate;
+	}
+
+	public void setPreviousxCoordinate(int previousxCoordinate) {
+		this.previousxCoordinate = previousxCoordinate;
+	}
+
+	public int getPreviousyCoordinate() {
+		return previousyCoordinate;
+	}
+
+	public void setPreviousyCoordinate(int previousyCoordinate) {
+		this.previousyCoordinate = previousyCoordinate;
 	}
 
 

@@ -25,7 +25,7 @@ public class Deck {
 	
 	private Random gen = new Random();
 	
-	public ArrayList<String> fullList = new ArrayList<>();
+	public ArrayList<String> fullCardList = new ArrayList<>();
 	
 	public ArrayList<String> confidential = new ArrayList<>();	
 	
@@ -91,8 +91,8 @@ public class Deck {
 	}
 	
 	private void setFullList() {
-		fullList.addAll(suspectCards);
-		fullList.addAll(weaponCards);
-		fullList.addAll(roomCards);
+		fullCardList.addAll(suspectCards);
+		fullCardList.addAll(weaponCards);
+		fullCardList.addAll(roomCards);
 	}
 }

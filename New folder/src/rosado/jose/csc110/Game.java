@@ -36,6 +36,7 @@ public class Game {
 		d.choseConfidential();
 		
 		RoomLogic r = new RoomLogic();
+		r.placeWeapons();
 		
 		howManyPlayers();
 			
@@ -84,20 +85,27 @@ public class Game {
 			// This will determine turn order depending on number of players
 		while(true) {
 			if(numberOfPlayers >= 2) {
-				playerTurn(player1, b, r);
-				playerTurn(player2, b, r);
+				playerTurn(player1, b, r, DiceRoll(), d);
+				b.boardTranslations();
+				
+				playerTurn(player2, b, r, DiceRoll(), d);
+				b.boardTranslations();
 				
 				if(numberOfPlayers >= 3) {
-					playerTurn(player3, b, r);
+					playerTurn(player3, b, r, DiceRoll(), d);
+					b.boardTranslations();
 					
 					if(numberOfPlayers >= 4) {
-						playerTurn(player4, b, r);
+						playerTurn(player4, b, r, DiceRoll(), d);
+						b.boardTranslations();
 						
 						if(numberOfPlayers >= 5) {
-							playerTurn(player5, b, r);
+							playerTurn(player5, b, r, DiceRoll(), d);
+							b.boardTranslations();
 							
 							if(numberOfPlayers == 6) {
-								playerTurn(player6, b, r);
+								playerTurn(player6, b, r, DiceRoll(), d);
+								b.boardTranslations();
 							} // End of 6 players
 						} // End of 5 players
 					} // End of 4 players
@@ -279,37 +287,37 @@ public class Game {
 		if(numberOfPlayers == 2) {
 			// This will add a random card from the full list onto the players hand
 			for(int i=0; i<9; i++) {
-				int randomCard = d.generateNumberForCards(d.fullList);
-				currentPlayer.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				int randomCard = d.generateNumberForCards(d.fullCardList);
+				currentPlayer.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 3) {
 			for(int i=0; i<6; i++) {
-				int randomCard = d.generateNumberForCards(d.fullList);
-				currentPlayer.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				int randomCard = d.generateNumberForCards(d.fullCardList);
+				currentPlayer.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 4) {
 			for(int i=0; i<4; i++) {
-				int randomCard = d.generateNumberForCards(d.fullList);
-				currentPlayer.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				int randomCard = d.generateNumberForCards(d.fullCardList);
+				currentPlayer.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 5) {
 			for(int i=0; i<3; i++) {
-				int randomCard = d.generateNumberForCards(d.fullList);
-				currentPlayer.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				int randomCard = d.generateNumberForCards(d.fullCardList);
+				currentPlayer.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 		else if(numberOfPlayers == 6) {
 			for(int i=0; i<3; i++) {
-				int randomCard = d.generateNumberForCards(d.fullList);
-				currentPlayer.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				int randomCard = d.generateNumberForCards(d.fullCardList);
+				currentPlayer.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 	}
@@ -321,18 +329,18 @@ public class Game {
 	 */
 	private void checkForCardRemainders(Deck d) {
 		if(numberOfPlayers >= 4) {
-			int randomCard = d.generateNumberForCards(d.fullList);
-			player1.hand.add(d.fullList.get(randomCard));
-			d.fullList.remove(randomCard);
+			int randomCard = d.generateNumberForCards(d.fullCardList);
+			player1.hand.add(d.fullCardList.get(randomCard));
+			d.fullCardList.remove(randomCard);
 			
-			randomCard = d.generateNumberForCards(d.fullList);
-			player2.hand.add(d.fullList.get(randomCard));
-			d.fullList.remove(randomCard);
+			randomCard = d.generateNumberForCards(d.fullCardList);
+			player2.hand.add(d.fullCardList.get(randomCard));
+			d.fullCardList.remove(randomCard);
 			
 			if(numberOfPlayers == 5) {
-				randomCard = d.generateNumberForCards(d.fullList);
-				player3.hand.add(d.fullList.get(randomCard));
-				d.fullList.remove(randomCard);
+				randomCard = d.generateNumberForCards(d.fullCardList);
+				player3.hand.add(d.fullCardList.get(randomCard));
+				d.fullCardList.remove(randomCard);
 			}
 		}
 	}
@@ -366,8 +374,6 @@ public class Game {
 			}
 		}
 	}
-	
-
 
 	/*
 	 * This method will contain all the code and methods that constitute a player turn
@@ -378,34 +384,101 @@ public class Game {
 	 *  - Checking for and entering a room
 	 *  - room logic (which includes accusations and shortcuts)
 	 */
-	private void playerTurn(Player currentPlayer, Board b, RoomLogic r) throws IOException {
-		DiceRoll();
-		for(int i=dice; i>0; i--) {
-			placePlayers(b);
-			System.out.println();
-			System.out.println("Hello " + currentPlayer.getName() + ", \n");
-			System.out.println("Your Hand: " + currentPlayer.hand + "\n");
-			System.out.println("You rolled a " + dice);
-			System.out.println("You have " + i + " more spaces to move");
-			
-			boolean isValidInput = false;
-			while(!isValidInput) {
-				try {
-					playerMovement(currentPlayer, b, r);
-					isValidInput = true;
-				}
-				catch(NumberFormatException ex) {
-					System.out.println("That's not a valid input. Try again");
-				}
+	private void playerTurn(Player currentPlayer, Board b, RoomLogic r, int diceRoll, Deck d) throws IOException {
+		// This is to save the dice roll in case a player wants to retry moving their piece
+		dice = diceRoll;
+		// First the dice is rolled and the players available moves be according to the players roll
+		if(!currentPlayer.isInsideRoom()) {
+			saveCurrentSpot(currentPlayer, b);
+			for(int i=diceRoll; i>0; i--) {
+				placePlayers(b);
+				System.out.println("\n" + "Hello " + currentPlayer.getName() + ",");
+				System.out.println();
+				System.out.println("Your Hand: " + currentPlayer.hand + "\n \n"
+						+ "You rolled a " + diceRoll + "\n"
+						+ "You have " + i + " more spaces to move");
 				
+				boolean isValidInput = false;
+				while(!isValidInput) {
+					try {
+						playerMovement(currentPlayer, b, r, i, d);
+						isValidInput = true;
+						if(currentPlayer.isInsideRoom()) {
+							i = 0;
+						}
+					}
+					catch(NumberFormatException ex) {
+						System.out.println("That's not a valid input. Try again");
+					}
+				}
+			}
+			if(!currentPlayer.isInsideRoom()) {
+				// A player cannot move again once they've entered a room
+				askForResetMovement(currentPlayer, b, r, d);
+			}
+		}
+		else {
+			if(r.playerOptions(currentPlayer, b, d)) {
+				playerTurn(currentPlayer, b, r, DiceRoll(), d);
 			}
 		}
 	}
 	
-	private void DiceRoll() {
+	/*
+	 * This Method will ask the player to reset their position
+	 * This will be used when a player's last space has been made
+	 * If the player says yes then the players piece will move to where it was originally save in
+	 * Then the board reprints and the player starts their turn again with the same dice count
+	 */
+	private void askForResetMovement(Player currentPlayer, Board b, RoomLogic r, Deck d) throws IOException {
+		placePlayers(b);
+		
+		boolean isValidInput = false;
+		while(!isValidInput) {
+			if(!currentPlayer.isInsideRoom()) {
+				System.out.println("\n" + "Its the end of your turn, \n" 
+						+ "did you want to reset your position and move again? (y/n)");
+				if(checkForRoom(currentPlayer, b)) {
+					System.out.println("there is also a room you can enter nearby (1)");
+				}
+				String input = in.readLine();
+				switch(input) {
+				case "1":
+					roomLogicMagic(currentPlayer, b, r, d);
+					break;
+				case "y":
+					b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+					currentPlayer.setxCoordinate(currentPlayer.getPreviousxCoordinate());
+					currentPlayer.setyCoordinate(currentPlayer.getPreviousyCoordinate());
+					placePlayers(b);
+					System.out.println();
+					playerTurn(currentPlayer, b, r, dice, d);
+					isValidInput = true;
+					break;
+				case "n":
+					System.out.println("\n" + "Okay, onto the next Player!");
+					isValidInput = true;
+					break;
+				default:
+					System.out.println("Not a valid answer");
+					break;
+				}
+			}
+			else {
+				isValidInput = true;
+			}
+		}
+	}
+
+	private void saveCurrentSpot(Player currentPlayer, Board b) {
+		currentPlayer.setPreviousxCoordinate(currentPlayer.getxCoordinate());
+		currentPlayer.setPreviousyCoordinate(currentPlayer.getyCoordinate());
+	}
+
+	private int DiceRoll() {
 		int max = 12;
 		int min = 2;
-		dice = generator.nextInt(max + 1 - min) + min;
+		return generator.nextInt(max + 1 - min) + min;
 	}
 
 	/*
@@ -431,130 +504,101 @@ public class Game {
 	 *  - then change the players coordinates accordingly and sets the Enum position on the board
 	 *  - An invalid input will not count towards the dice roll counter, allowing for safe errors
 	 */
-	private void playerMovement(Player currentPlayer, Board b, RoomLogic r) throws IOException {
+	private void playerMovement(Player currentPlayer, Board b, RoomLogic r, int spacesRemaining, Deck d) throws IOException {
 		
-		boolean isValidInput = false;
-		while(!isValidInput) {
-			if(checkForRoom(currentPlayer, b)) {
-				System.out.println("You found a room! \n"
-						+ "Where do you want to move?"
-						+ "\n 1 = Up"
-						+ "\n 2 = Left" 
-						+ "\n 3 = Down"
-						+ "\n 4 = Right"
-						+ "\n 5 = Enter Room");
-			}
-			else {
-				System.out.println("Where do you want to move?"
-						+ "\n 1 = Up"
-						+ "\n 2 = Left" 
-						+ "\n 3 = Down"
-						+ "\n 4 = Right");
-			}
-			String rawInput = in.readLine();
-			int input = Integer.parseInt(rawInput);
+		if(!currentPlayer.isInsideRoom()) {
+			boolean isValidInput = false;
+			while(!isValidInput) {
+				if(checkForRoom(currentPlayer, b)) {
+					System.out.println("You found a room! \n"
+							+ "Where do you want to move?"
+							+ "\n 1 = Up"
+							+ "\n 2 = Left" 
+							+ "\n 3 = Down"
+							+ "\n 4 = Right"
+							+ "\n 5 = Enter Room");
+				}
+				else {
+					System.out.println("Where do you want to move?"
+							+ "\n 1 = Up"
+							+ "\n 2 = Left" 
+							+ "\n 3 = Down"
+							+ "\n 4 = Right");
+				}
+				String rawInput = in.readLine();
+				int input = Integer.parseInt(rawInput);
+					
+				/*
+				 * Eventually, there needs to be a method to check for a room
+				 * Once there is a room, ask player if they wish to enter (likely by adding the option to the movement menu)
+				 */
 				
-			/*
-			 * Eventually, there needs to be a method to check for a room
-			 * Once there is a room, ask player if they wish to enter (likely by adding the option to the movement menu)
-			 */
-			
-			switch(input) {
-				case 1:
-					// Up
-					if(b.isEmpty(currentPlayer, input)) {
-						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() - 1);
-						isValidInput = true;
-					}
-					else {
-						System.out.println("You can't move here! There is a " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-					}
-					break;
-				case 2:
-					// Left
-					if(b.isEmpty(currentPlayer, input)) {
-						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
-						isValidInput = true;
-					}
-					else {
-						System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-					}
-					break;
-				case 3:
-					// Down
-					if(b.isEmpty(currentPlayer, input)) {
-						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() + 1);
-						isValidInput = true;
-					}
-					else {
-						System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-					}
-					break;
-				case 4:
-					// Right
-					if(b.isEmpty(currentPlayer, input)) {
-						b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-						currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
-						isValidInput = true;
-					}
-					else {
-						System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-					}
-					break;
-				case 5:
-					// Enter Room
-					if(checkForRoom(currentPlayer, b)) {
-						// The player is on a doorway
-						roomLogicMagic(currentPlayer, b, r);
+				switch(input) {
+					case 1:
+						// Up
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() - 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is a " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
 						break;
-					}
-					else {
-						System.out.println("That's not a valid coordinate");
-					}
-				default:
-					System.out.println("Thats not a valid coordinate");
-			} // End of Switch
-		} // End of WHILE loop
+					case 2:
+						// Left
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
+						break;
+					case 3:
+						// Down
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() + 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
+						break;
+					case 4:
+						// Right
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is something already there! try again.");
+						}
+						break;
+					case 5:
+						// Enter Room
+						if(checkForRoom(currentPlayer, b)) {
+							// The player is on a doorway
+							roomLogicMagic(currentPlayer, b, r, d);
+							isValidInput = true;
+							break;
+						}
+						else {
+							System.out.println("That's not a valid coordinate");
+						}
+					default:
+						System.out.println("Thats not a valid coordinate");
+				} // End of Switch
+			} // End of WHILE loop
+		}// End of IF statement
+		else {
+			r.playerOptions(currentPlayer, b, d);
+		}
 	} // End of method
-
-	private void roomLogicMagic(Player currentPlayer, Board b, RoomLogic r) {
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Study) {
-			System.out.println("You entered the Study!");
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BallRoom) {
-			System.out.println("You entered the BallRoom!");
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BilliardRoom) {
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Conservatory) {
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.DiningRoom) {
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Hall) {
-			System.out.println("You entered the hall!");
-			r.movePlayersToRoom(currentPlayer, r.HallRoom);
-			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-			System.out.println("There is a (Weapon PlaceHolder) here");
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Kitchen) {
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Library) {
-			
-		}
-		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Lounge) {
-			
-		}
-		
-	}
-
+	
 	private boolean checkForRoom(Player currentPlayer, Board b) {
 		for(int i=0; i<27; i++) {
 			for(int j=0; j<25; j++) {
@@ -588,5 +632,107 @@ public class Game {
 			}
 		}
 		return false;
+	}
+
+	private void roomLogicMagic(Player currentPlayer, Board b, RoomLogic r, Deck d) throws IOException {
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Study) {
+			System.out.println("You entered the Study!");
+			if(r.StudyRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.StudyRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BallRoom) {
+			System.out.println("You entered the BallRoom!");
+			if(r.BallRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.BallRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.BilliardRoom) {
+			System.out.println("You entered the Billiard Room!");
+			if(r.BilliardRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.BilliardRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Conservatory) {
+			System.out.println("You entered the Conservatory!");
+			if(r.ConservatoryWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.ConservatoryWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.DiningRoom) {
+			System.out.println("You entered the Dining Room!");
+			if(r.DiningRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.DiningRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Hall) {
+			System.out.println("You entered the hall!");
+			if(r.HallRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.HallRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Kitchen) {
+			System.out.println("You entered the Kitchen!");
+			if(r.KitchenRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.KitchenRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Library) {
+			System.out.println("You entered the Library!");
+			if(r.LibraryRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.LibraryRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
+		if(b.roomLocation[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate()] == Rooms.Lounge) {
+			System.out.println("You have entered the Lounge!");
+			if(r.LoungeRoomWeapon.size() == 0) {
+				System.out.println("There's nothing of interest here...");
+			}
+			else {
+				System.out.println("There is a " + r.LoungeRoomWeapon + " here");
+			}
+			r.movePlayersToRoom(currentPlayer, b, d);
+			b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+		}
 	}
 } // End of class

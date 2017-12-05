@@ -105,7 +105,7 @@ public class Board {
 		//Doorway tiles
 		roomLocation[8][12] = Rooms.Hall;
 		roomLocation[8][13] = Rooms.Hall;
-		roomLocation[4][10] = Rooms.Hall;
+		roomLocation[5][9] = Rooms.Hall;
 	}
 	
 	private void loungeRoomPlacement() {
@@ -318,7 +318,7 @@ public class Board {
 	 */
 	public boolean isEmpty(Player currentPlayer, int input) {
 		if(input == 1) {
-			if(board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] == null || board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] == BoardSpaces.Room) {
+			if(board[currentPlayer.getyCoordinate() - 1][currentPlayer.getxCoordinate()] == null) {
 				return true;
 			}
 			else {
@@ -326,7 +326,7 @@ public class Board {
 			}
 		}
 		else if(input == 2) {
-			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] == null || board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] == BoardSpaces.Room) {
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() - 1] == null) {
 				return true;
 			}
 			else {
@@ -334,7 +334,7 @@ public class Board {
 			}
 		}
 		else if(input == 3) {
-			if(board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] == null || board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] == BoardSpaces.Room) {
+			if(board[currentPlayer.getyCoordinate() + 1][currentPlayer.getxCoordinate()] == null) {
 				return true;
 			}
 			else {
@@ -342,7 +342,7 @@ public class Board {
 			}
 		}
 		else if(input == 4) {
-			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] == null || board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] == BoardSpaces.Room) {
+			if(board[currentPlayer.getyCoordinate()][currentPlayer.getxCoordinate() + 1] == null) {
 				return true;
 			}
 			else {
@@ -350,5 +350,10 @@ public class Board {
 			}
 		}
 		return true;
+	}
+
+	public void removePlayerFromSpot(Player currentPlayer) {
+		currentPlayer.setyCoordinate(0);
+		currentPlayer.setxCoordinate(0);
 	}
 }
