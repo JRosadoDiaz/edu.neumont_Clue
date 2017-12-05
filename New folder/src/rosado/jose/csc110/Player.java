@@ -29,6 +29,8 @@ public class Player {
 	public ArrayList<String> hand = new ArrayList<>();
 	
 	private boolean insideRoom = false;
+	
+	private boolean canPlayAgain = true;
 
 	public Suspects getName() {
 		return name;
@@ -76,6 +78,14 @@ public class Player {
 
 	public void setPreviousyCoordinate(int previousyCoordinate) {
 		this.previousyCoordinate = previousyCoordinate;
+	}
+
+	public boolean isCanPlayAgain() {
+		return canPlayAgain;
+	}
+
+	public void setCanPlayAgain(boolean canPlayAgain) {
+		this.canPlayAgain = canPlayAgain;
 	}
 
 

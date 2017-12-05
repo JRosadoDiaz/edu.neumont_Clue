@@ -4,14 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Deck {
-	
-//	Cards suspects = new Cards();
-//	
-//	Cards weapons = new Cards();
-//	
-//	Cards rooms = new Cards();
-//	
-//	ArrayList<Cards> cards = new ArrayList<>();
 
 	/*
 	 * These three lists will be made as cards for their respective type
@@ -73,6 +65,9 @@ public class Deck {
 		setConfidentialCards(generateNumberForCards(weaponCards), weaponCards);
 		setConfidentialCards(generateNumberForCards(roomCards), roomCards);
 		setFullList();
+		
+		//Test
+		System.out.println(confidential);
 	}
 	
 	public int generateNumberForCards(ArrayList<String> currentList) {

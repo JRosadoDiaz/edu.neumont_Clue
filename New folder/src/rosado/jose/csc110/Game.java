@@ -221,6 +221,7 @@ public class Game {
 			System.out.println();
 			
 			System.out.println("Player 6, Your name will be " + suspectNames.get(0) + "\n");
+			player6.setName(suspectNames.get(0));
 		}
 	}
 
@@ -385,41 +386,43 @@ public class Game {
 	 *  - room logic (which includes accusations and shortcuts)
 	 */
 	private void playerTurn(Player currentPlayer, Board b, RoomLogic r, int diceRoll, Deck d) throws IOException {
-		// This is to save the dice roll in case a player wants to retry moving their piece
-		dice = diceRoll;
-		// First the dice is rolled and the players available moves be according to the players roll
-		if(!currentPlayer.isInsideRoom()) {
-			saveCurrentSpot(currentPlayer, b);
-			for(int i=diceRoll; i>0; i--) {
-				placePlayers(b);
-				System.out.println("\n" + "Hello " + currentPlayer.getName() + ",");
-				System.out.println();
-				System.out.println("Your Hand: " + currentPlayer.hand + "\n \n"
-						+ "You rolled a " + diceRoll + "\n"
-						+ "You have " + i + " more spaces to move");
-				
-				boolean isValidInput = false;
-				while(!isValidInput) {
-					try {
-						playerMovement(currentPlayer, b, r, i, d);
-						isValidInput = true;
-						if(currentPlayer.isInsideRoom()) {
-							i = 0;
+		if(currentPlayer.isCanPlayAgain()) {
+			// This is to save the dice roll in case a player wants to retry moving their piece
+			dice = diceRoll;
+			// First the dice is rolled and the players available moves be according to the players roll
+			if(!currentPlayer.isInsideRoom()) {
+				saveCurrentSpot(currentPlayer, b);
+				for(int i=diceRoll; i>0; i--) {
+					placePlayers(b);
+					System.out.println("\n" + "Hello " + currentPlayer.getName() + ",");
+					System.out.println();
+					System.out.println("Your Hand: " + currentPlayer.hand + "\n \n"
+							+ "You rolled a " + diceRoll + "\n"
+							+ "You have " + i + " more spaces to move");
+					
+					boolean isValidInput = false;
+					while(!isValidInput) {
+						try {
+							playerMovement(currentPlayer, b, r, i, d);
+							isValidInput = true;
+							if(currentPlayer.isInsideRoom()) {
+								i = 0;
+							}
+						}
+						catch(NumberFormatException ex) {
+							System.out.println("That's not a valid input. Try again");
 						}
 					}
-					catch(NumberFormatException ex) {
-						System.out.println("That's not a valid input. Try again");
-					}
+				}
+				if(!currentPlayer.isInsideRoom()) {
+					// A player cannot move again once they've entered a room
+					askForResetMovement(currentPlayer, b, r, d);
 				}
 			}
-			if(!currentPlayer.isInsideRoom()) {
-				// A player cannot move again once they've entered a room
-				askForResetMovement(currentPlayer, b, r, d);
-			}
-		}
-		else {
-			if(r.playerOptions(currentPlayer, b, d)) {
-				playerTurn(currentPlayer, b, r, DiceRoll(), d);
+			else {
+				if(r.playerOptions(currentPlayer, b, d)) {
+					playerTurn(currentPlayer, b, r, DiceRoll(), d);
+				}
 			}
 		}
 	}

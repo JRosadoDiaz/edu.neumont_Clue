@@ -290,7 +290,7 @@ public class RoomLogic {
 			makeSuggestion(currentPlayer, d);
 			return false ;
 		case 2:
-			makeAccusation();
+			makeAccusation(currentPlayer, d);
 			return false;
 		case 3:
 				goThroughSecretPassage(currentPlayer, b);
@@ -561,111 +561,183 @@ public class RoomLogic {
 		
 	}
 
-	private void makeAccusation() {
+	private void makeAccusation(Player currentPlayer, Deck d) throws IOException {
+		String roomSuggestion = roomSuggestionChoiceAccusation(currentPlayer);
+		String weaponSuggestion = weaponSuggestionChoice();
+		String suspectSuggestion = suspectSuggestionChoice(roomSuggestion, weaponSuggestion);
 		
+		if(checkSuggestion(roomSuggestion, weaponSuggestion, suspectSuggestion, d)) {
+			System.exit(0);
+		}
+		else {
+			System.out.println("Your lack of evidence costed you greatly! \n" 
+					+ "You're off the case!");
+			currentPlayer.setCanPlayAgain(false);
+		}
 	}
 
 	private void makeSuggestion(Player currentPlayer, Deck d) throws IOException {
-		Rooms roomSuggestion = null;
-		Weapons weaponSuggestion = null;
-		Suspects suspectSuggestion = null;
-		roomSuggestionChoice(currentPlayer, roomSuggestion);
-		weaponSuggestionChoice(weaponSuggestion);
-		suspectSuggestionChoice(roomSuggestion, weaponSuggestion, suspectSuggestion);
+		String roomSuggestion = roomSuggestionChoice(currentPlayer);
+		String weaponSuggestion = weaponSuggestionChoice();
+		String suspectSuggestion = suspectSuggestionChoice(roomSuggestion, weaponSuggestion);
 		
-		checkSuggestion(roomSuggestion, weaponSuggestion, suspectSuggestion, d);
+		if(checkSuggestion(roomSuggestion, weaponSuggestion, suspectSuggestion, d)) {
+			System.exit(0);
+		}
 	}
 
-
-	private void roomSuggestionChoice(Player currentPlayer, Rooms roomSuggestion) {
+	private String roomSuggestionChoiceAccusation(Player currentPlayer) throws IOException {
+		boolean isValidInput = false;
+		while(!isValidInput) {
+			System.out.println("The murder happened in the..."
+					+ "\n 1 - Study"
+					+ "\n 2 - Hall"
+					+ "\n 3 - Lounge"
+					+ "\n 4 - Dining Room"
+					+ "\n 5 - Billiard Room"
+					+ "\n 6 - Conservatory"
+					+ "\n 7 - Ballroom"
+					+ "\n 8 - Kitchen");
+			String weaponSuggestionRawInput = in.readLine();
+			switch(weaponSuggestionRawInput) {
+			case "1":
+				isValidInput = true;
+				return "Study";
+			case "2":
+				isValidInput = true;
+				return "Hall";
+			case "3":
+				isValidInput = true;
+				return "Lounge";
+			case "4":
+				isValidInput = true;
+				return "DiningRoom";
+			case "5":
+				isValidInput = true;
+				return "BilliardRoom";
+			case "6":
+				isValidInput = true;
+				return "Conservatory";
+			case "7":
+				isValidInput = true;
+				return "BallRoom";
+			case "8":
+				isValidInput = true;
+				return "Kitchen";
+			default:
+				System.out.println("Thats not a valid option");
+			}
+		}
+		return null;
+	}
+	
+	private String roomSuggestionChoice(Player currentPlayer) {
 		System.out.print("The murder was done in the ");
 		if(LoungeRoom.contains(currentPlayer.getName())) {
-			System.out.println("Lounge ");
-			roomSuggestion = Rooms.Lounge;
+			System.out.println("Lounge,");
+			return "Lounge";
 		}
+		if(StudyRoom.contains(currentPlayer.getName())) {
+			System.out.println("Study,");
+			return "Study";
+		}
+		if(HallRoom.contains(currentPlayer.getName())) {
+			System.out.println("Hall,");
+			return "Hall";
+		}
+		if(DiningRoom.contains(currentPlayer.getName())) {
+			System.out.println("Dining Room,");
+			return "DiningRoom";
+		}
+		if(BilliardRoomList.contains(currentPlayer.getName())) {
+			System.out.println("Billiard Room,");
+			return "BilliardRoom";
+		}
+		if(KitchenRoom.contains(currentPlayer.getName())) {
+			System.out.println("Kitchen,");
+			return "Kitchen";
+		}
+		if(ConservatoryRoom.contains(currentPlayer.getName())) {
+			System.out.println("Conservatory,");
+			return "Conservatory";
+		}
+		if(BallRoom.contains(currentPlayer.getName())) {
+			System.out.println("Ballroom,");
+			return "BallRoom";
+		}
+		return null;
 	}
 
-	private void weaponSuggestionChoice(Weapons weaponSuggestion) throws IOException {
-		System.out.println(", With a..." 
-				+ "\n 1 - Rope"
-				+ "\n 2 - Lead Pipe"
-				+ "\n 3 - Knife"
-				+ "\n 4 - Wrench"
-				+ "\n 5 - CandleStick"
-				+ "\n 6 - Pistol");
-		String weaponSuggestionRawInput = in.readLine();
-		switch(weaponSuggestionRawInput) {
-		case "1":
-			weaponSuggestion = Weapons.Rope;
-			break;
-		case "2":
-			weaponSuggestion = Weapons.LeadPipe;
-			break;
-		case "3":
-			weaponSuggestion = Weapons.Knife;
-			break;
-		case "4":
-			weaponSuggestion = Weapons.Wrench;
-			break;
-		case "5":
-			weaponSuggestion = Weapons.CandleStick;
-			break;
-		case "6":
-			weaponSuggestion = Weapons.Pistol;
-			break;
-		default:
-			System.out.println("Thats not a valid option");
+	private String weaponSuggestionChoice() throws IOException {
+		boolean isValidInput = false;
+		while(!isValidInput) {
+			System.out.println("With a..." 
+					+ "\n 1 - Rope"
+					+ "\n 2 - Lead Pipe"
+					+ "\n 3 - Knife"
+					+ "\n 4 - Wrench"
+					+ "\n 5 - CandleStick"
+					+ "\n 6 - Pistol");
+			String weaponSuggestionRawInput = in.readLine();
+			switch(weaponSuggestionRawInput) {
+			case "1":
+				return "Rope";
+			case "2":
+				return "LeadPipe";
+			case "3":
+				return "Knife";
+			case "4":
+				return "Wrench";
+			case "5":
+				return "CandleStick";
+			case "6":
+				return "Pistol";
+			default:
+				System.out.println("Thats not a valid option");
+			}
 		}
+		return null;
 		
 	}
 
-	private void suspectSuggestionChoice(Rooms roomSuggestion, Weapons weaponSuggestion, Suspects suspectSuggestion) throws IOException {
-		System.out.println("The muder was done in the " + roomSuggestion + " With a " + weaponSuggestion
+	private String suspectSuggestionChoice(String roomSuggestion, String weaponSuggestion) throws IOException {
+		System.out.println("The murder was done in the " + roomSuggestion + " With a " + weaponSuggestion + "?"
 				+ "\nBut by who?"
-				+ "1 - Miss Scarlet"
-				+ "2 - Mrs White"
-				+ "3 - Mrs Peacock"
-				+ "4 - Colonel Mustard"
-				+ "5 - Professor Plum"
-				+ "6 - Mr Green");
+				+ "\n 1 - Miss Scarlet"
+				+ "\n 2 - Mrs White"
+				+ "\n 3 - Mrs Peacock"
+				+ "\n 4 - Colonel Mustard"
+				+ "\n 5 - Professor Plum"
+				+ "\n 6 - Mr Green");
 		String suspectSuggestionRawInput = in.readLine();
 		switch(suspectSuggestionRawInput) {
 		case "1":
-			suspectSuggestion = Suspects.Miss_Scarlet;
-			break;
+			return "Miss_Scarlet";
 		case "2":
-			suspectSuggestion = Suspects.Mrs_White;
-			break;
+			return "Mrs_White";
 		case "3":
-			suspectSuggestion = Suspects.Mrs_Peacock;
-			break;
+			return "Mrs_Peacock";
 		case "4":
-			suspectSuggestion = Suspects.Colonel_Mustard;
-			break;
+			return "Colonel_Mustard";
 		case "5":
-			suspectSuggestion = Suspects.Professor_Plum;
-			break;
+			return "Professor_Plum";
 		case "6":
-			suspectSuggestion = Suspects.Mr_Green;
-			break;
+			return "Mr_Green";
 		default:
 			System.out.println("Thats not a valid option");
 		}
-		
+		return null;
 	}
 
 	
-	private void checkSuggestion(Rooms roomSuggestion, Weapons weaponSuggestion, Suspects suspectSuggestion, Deck d) {
+	private boolean checkSuggestion(String roomSuggestion, String weaponSuggestion, String suspectSuggestion, Deck d) {
 		if(d.confidential.contains(roomSuggestion) && d.confidential.contains(weaponSuggestion) && d.confidential.contains(suspectSuggestion)) {
 			System.out.println("The murder has been solved! Case closed!");
+			return true;
 		}
 		else {
 			System.out.println("Wrong, you don't have enough evidence to support that");
+			return false;
 		}
-		
-		
 	}
-
-	
-	
 }
