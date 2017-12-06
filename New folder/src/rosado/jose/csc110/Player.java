@@ -17,6 +17,7 @@ public class Player {
 	
 	private Suspects name;
 	
+	private ArrayList<String> notepad = new ArrayList<>();
 	// These coordinates will be adjusted tied to their position on the board array
 	private int xCoordinate;
 	
@@ -88,5 +89,12 @@ public class Player {
 		this.canPlayAgain = canPlayAgain;
 	}
 
+	public ArrayList<String> getNotepad() {
+		return notepad;
+	}
+
+	public void setNotepad(ArrayList<String> notepad) {
+		this.notepad = notepad;
+	}
 
 }

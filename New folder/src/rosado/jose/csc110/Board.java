@@ -288,6 +288,7 @@ public class Board {
 				else if(board[i][j] == BoardSpaces.Professor_Plum) {
 					asciiBoard[i][j] = "PP";
 				}
+				asciiBoard[0][0] = "--";
 			}
 		}
 	}

@@ -27,7 +27,14 @@ public class Game {
 	
 	public Player player6;
 
-	
+	/*
+	 * This will create all the setup required
+	 * First by setting up the base board design
+	 * Then the deck is sorted out
+	 * The Rooms are given the weapons to 6 random rooms
+	 * Now the players are created by asking for how many players
+	 * Lastly before the game starts we ask players for their names
+	 */
 	public void play() throws IOException {
 		Board b = new Board();
 		b.setupBoard();
@@ -39,12 +46,11 @@ public class Game {
 		r.placeWeapons();
 		
 		howManyPlayers();
-			
+
 		createPlayerList();
 		askPlayersForNames();
 		
-		// This WHILE loop will change to win/lose condition once its implemented
-			// This will determine how the cards are sent to each player
+		// This will determine how the cards are sent to each player
 		switch(numberOfPlayers) {
 			case 2:
 				shuffleCards(player1, d);
@@ -82,7 +88,8 @@ public class Game {
 				System.out.println("should never happen");
 		}
 			
-			// This will determine turn order depending on number of players
+		// This will determine turn order depending on number of players
+		// boardTranslations are used as a safety measure to reprint the board after a players last move
 		while(true) {
 			if(numberOfPlayers >= 2) {
 				playerTurn(player1, b, r, DiceRoll(), d);
@@ -147,6 +154,12 @@ public class Game {
 		player6.setyCoordinate(6);
 	}
 	
+	/*
+	 * When the game starts the players will be asked to set their name
+	 * depending on the numberOfPlayers int will determine how many people will choose
+	 * with each choice their name is removed from the list of available people
+	 * when all players have chosen, if there are any remainders they will be randomized among the cpu
+	 */
 	private void askPlayersForNames() throws IOException {
 		ArrayList<Suspects> suspectNames = new ArrayList<>();
 		suspectNames.add(Suspects.Colonel_Mustard);
@@ -225,6 +238,10 @@ public class Game {
 		}
 	}
 
+	/*
+	 * This method is tied to askPlayersForNames()
+	 * It will randomize the remaining list of names depending on the number of players
+	 */
 	private void randomizeRemainingNames(ArrayList<Suspects> suspectNames) {
 		if(numberOfPlayers <= 5) {
 			int gen = generator.nextInt(suspectNames.size());
@@ -392,6 +409,8 @@ public class Game {
 			// First the dice is rolled and the players available moves be according to the players roll
 			if(!currentPlayer.isInsideRoom()) {
 				saveCurrentSpot(currentPlayer, b);
+				
+				//This loop contains the number a times a player can move according to their dice roll
 				for(int i=diceRoll; i>0; i--) {
 					placePlayers(b);
 					System.out.println("\n" + "Hello " + currentPlayer.getName() + ",");
@@ -400,6 +419,7 @@ public class Game {
 							+ "You rolled a " + diceRoll + "\n"
 							+ "You have " + i + " more spaces to move");
 					
+					// This WHILE loop is for the sake of re-prompting the player for a valid answer
 					boolean isValidInput = false;
 					while(!isValidInput) {
 						try {
@@ -410,7 +430,7 @@ public class Game {
 							}
 						}
 						catch(NumberFormatException ex) {
-							System.out.println("That's not a valid input. Try again");
+							System.out.println("That's not an option. Try again");
 						}
 					}
 				}
@@ -427,6 +447,131 @@ public class Game {
 		}
 	}
 	
+	/*
+	 * This method contains the logic for player movement
+	 * First the method will prompt for a direction
+	 * Then based on the input the method will do several checks
+	 *  - First checks for a free space in the desired location
+	 *  - If space is empty, remove the current position of the characters Enum
+	 *  - then change the players coordinates accordingly and sets the Enum position on the board
+	 *  - An invalid input will not count towards the dice roll counter, allowing for safe errors
+	 */
+	private void playerMovement(Player currentPlayer, Board b, RoomLogic r, int spacesRemaining, Deck d) throws IOException {
+		
+		if(!currentPlayer.isInsideRoom()) {
+			boolean isValidInput = false;
+			while(!isValidInput) {
+				if(checkForRoom(currentPlayer, b)) {
+					System.out.println("You found a room! \n"
+							+ "Where do you want to move?"
+							+ "\n 1 = Up"
+							+ "\n 2 = Left" 
+							+ "\n 3 = Down"
+							+ "\n 4 = Right"
+							+ "\n 5 = Enter Room"
+							+ "\n Press '9' to access your notepad");
+				}
+				else {
+					System.out.println("Where do you want to move?"
+							+ "\n 1 = Up"
+							+ "\n 2 = Left" 
+							+ "\n 3 = Down"
+							+ "\n 4 = Right"
+							+ "\n Press '9' to access your notepad");
+				}
+				String rawInput = in.readLine();
+				int input = Integer.parseInt(rawInput);
+					
+				/*
+				 * Eventually, there needs to be a method to check for a room
+				 * Once there is a room, ask player if they wish to enter (likely by adding the option to the movement menu)
+				 */
+				
+				switch(input) {
+					case 1:
+						// Up
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() - 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is a " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
+						break;
+					case 2:
+						// Left
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
+						break;
+					case 3:
+						// Down
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() + 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
+						}
+						break;
+					case 4:
+						// Right
+						if(b.isEmpty(currentPlayer, input)) {
+							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
+							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
+							isValidInput = true;
+						}
+						else {
+							System.out.println("You can't move here! There is something already there! try again.");
+						}
+						break;
+					case 5:
+						// Enter Room
+						if(checkForRoom(currentPlayer, b)) {
+							// The player is on a doorway
+							roomLogicMagic(currentPlayer, b, r, d);
+							isValidInput = true;
+							break;
+						}
+						else {
+							System.out.println("That's not a valid coordinate");
+						}
+					case 9:
+						useNotePad(currentPlayer);
+						break;
+					default:
+						System.out.println("Please select a valid coordinate");
+				} // End of Switch
+			} // End of WHILE loop
+		}// End of IF statement
+		else {
+			r.playerOptions(currentPlayer, b, d);
+		}
+	} // End of method
+	
+	private void useNotePad(Player currentPlayer) throws IOException {
+		System.out.println("Your notes:");
+		for(int i=0; i<currentPlayer.getNotepad().size(); i++) {
+			System.out.println((i+1) + " - " +currentPlayer.getNotepad().get(i));
+		}
+		System.out.println("Press enter after leaving a note");
+		String newNotepadEntry = in.readLine();
+		if(newNotepadEntry != null && newNotepadEntry.length()>0) {
+			currentPlayer.getNotepad().add(newNotepadEntry);
+			System.out.println("Note added!");
+		}
+		else {
+			System.out.println("Nothing new added.");
+		}
+	}
+
 	/*
 	 * This Method will ask the player to reset their position
 	 * This will be used when a player's last space has been made
@@ -498,109 +643,7 @@ public class Game {
 		b.printBoard();
 	}
 	
-	/*
-	 * This method contains the logic for player movement
-	 * First the method will prompt for a direction
-	 * Then based on the input the method will do several checks
-	 *  - First checks for a free space in the desired location
-	 *  - If space is empty, remove the current position of the characters Enum
-	 *  - then change the players coordinates accordingly and sets the Enum position on the board
-	 *  - An invalid input will not count towards the dice roll counter, allowing for safe errors
-	 */
-	private void playerMovement(Player currentPlayer, Board b, RoomLogic r, int spacesRemaining, Deck d) throws IOException {
-		
-		if(!currentPlayer.isInsideRoom()) {
-			boolean isValidInput = false;
-			while(!isValidInput) {
-				if(checkForRoom(currentPlayer, b)) {
-					System.out.println("You found a room! \n"
-							+ "Where do you want to move?"
-							+ "\n 1 = Up"
-							+ "\n 2 = Left" 
-							+ "\n 3 = Down"
-							+ "\n 4 = Right"
-							+ "\n 5 = Enter Room");
-				}
-				else {
-					System.out.println("Where do you want to move?"
-							+ "\n 1 = Up"
-							+ "\n 2 = Left" 
-							+ "\n 3 = Down"
-							+ "\n 4 = Right");
-				}
-				String rawInput = in.readLine();
-				int input = Integer.parseInt(rawInput);
-					
-				/*
-				 * Eventually, there needs to be a method to check for a room
-				 * Once there is a room, ask player if they wish to enter (likely by adding the option to the movement menu)
-				 */
-				
-				switch(input) {
-					case 1:
-						// Up
-						if(b.isEmpty(currentPlayer, input)) {
-							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() - 1);
-							isValidInput = true;
-						}
-						else {
-							System.out.println("You can't move here! There is a " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-						}
-						break;
-					case 2:
-						// Left
-						if(b.isEmpty(currentPlayer, input)) {
-							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() - 1);
-							isValidInput = true;
-						}
-						else {
-							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-						}
-						break;
-					case 3:
-						// Down
-						if(b.isEmpty(currentPlayer, input)) {
-							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-							currentPlayer.setyCoordinate(currentPlayer.getyCoordinate() + 1);
-							isValidInput = true;
-						}
-						else {
-							System.out.println("You can't move here! There is " + b.board[currentPlayer.getyCoordinate() +1][currentPlayer.getxCoordinate()] + " there! try again.");
-						}
-						break;
-					case 4:
-						// Right
-						if(b.isEmpty(currentPlayer, input)) {
-							b.removePreviousSpot(currentPlayer.getyCoordinate(), currentPlayer.getxCoordinate());
-							currentPlayer.setxCoordinate(currentPlayer.getxCoordinate() + 1);
-							isValidInput = true;
-						}
-						else {
-							System.out.println("You can't move here! There is something already there! try again.");
-						}
-						break;
-					case 5:
-						// Enter Room
-						if(checkForRoom(currentPlayer, b)) {
-							// The player is on a doorway
-							roomLogicMagic(currentPlayer, b, r, d);
-							isValidInput = true;
-							break;
-						}
-						else {
-							System.out.println("That's not a valid coordinate");
-						}
-					default:
-						System.out.println("Thats not a valid coordinate");
-				} // End of Switch
-			} // End of WHILE loop
-		}// End of IF statement
-		else {
-			r.playerOptions(currentPlayer, b, d);
-		}
-	} // End of method
+
 	
 	private boolean checkForRoom(Player currentPlayer, Board b) {
 		for(int i=0; i<27; i++) {
