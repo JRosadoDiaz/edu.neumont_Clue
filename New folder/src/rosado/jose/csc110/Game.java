@@ -88,8 +88,8 @@ public class Game {
 				System.out.println("should never happen");
 		}
 			
-		// This will determine turn order depending on number of players
 		// boardTranslations are used as a safety measure to reprint the board after a players last move
+		// This will determine turn order depending on number of players
 		while(true) {
 			if(numberOfPlayers >= 2) {
 				playerTurn(player1, b, r, DiceRoll(), d);
@@ -643,8 +643,11 @@ public class Game {
 		b.printBoard();
 	}
 	
-
-	
+	/*
+	 * This will return a boolean
+	 * By checking if the player is on top of a door way
+	 * by checking its location through the roomLocation[][] where all the doorway positions are
+	 */
 	private boolean checkForRoom(Player currentPlayer, Board b) {
 		for(int i=0; i<27; i++) {
 			for(int j=0; j<25; j++) {
